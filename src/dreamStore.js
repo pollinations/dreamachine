@@ -1,5 +1,7 @@
 import { getPollens } from "@pollinations/ipfs/awsPollenRunner";
 import Store from "@pollinations/ipfs/pollenStore";
+import { useEffect, useState } from "react";
+import useInterval from "use-interval";
 
 const dreamStore = Store("dreamachine");
 
@@ -24,3 +26,35 @@ export const getDreamResults = async (dreamID) => {
 }
 
 initDreamStore();
+
+
+// poll dream store every 5 seconds and return the current state of dreams
+function usePollDreams() {
+    const [dreams, sDreams] = useState([]);
+
+    useEffect(() => {
+      (async () => sDreams(await getDreams()))();
+    }, []);
+
+    useInterval(async () => sDreams( await getDreams()), 5000);
+    return dreams;
+  
+}
+
+
+// return dream and possibility to jump to the next dream
+
+export function useDreams() {
+
+    const dreams = usePollDreams();
+    const [dreamIndex, setDreamIndex] = useState(0);
+  
+    const increaseDreamIndex = () => setDreamIndex((dreamIndex + 1) % dreams.length);
+  
+    console.log("dreamIndex", dreamIndex)
+    const currentDream = dreams[dreamIndex];
+    
+    return {currentDream, increaseDreamIndex};
+  }
+  
+  
