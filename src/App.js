@@ -29,10 +29,16 @@ function DreamPlayer({ donePlaying, dream }) {
   const data = useIPFS(dreamResultsID);
 
   const dreamVideoURL = data?.output && data?.output["out_0.mp4"];
+
+  // skip videos that are not yet rendered.
+  useEffect(() => {
+    if (!dreamVideoURL) 
+      donePlaying();
+  }, [dreamVideoURL]);
   // useInterval(donePlaying, 10000);
   console.log("dreamVideoURL", dreamVideoURL, data);
   return <>
-  {JSON.stringify(data)}
+  {/* {JSON.stringify(data)} */}
     <video controls onEnded={donePlaying} autoPlay playsInline muted  src={dreamVideoURL} />
   </>
 }
