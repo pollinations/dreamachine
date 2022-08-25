@@ -15,7 +15,7 @@ export default function DreamPlayer() {
             playsInline 
             muted 
             src={dreamVideoURL}/>
-            
+
         }
     </Container>
 }
