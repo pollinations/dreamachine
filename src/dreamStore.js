@@ -58,3 +58,17 @@ export function useDreams() {
   }
   
   
+  // gets the output pollen content id for a given pollen input id
+export function useDreamResults(dream) {
+  
+  const [dreamResultsID, setDreamResultsID] = useState(null);
+
+  useEffect(() => {
+    if (dream?.dreamID) {
+      (async () => setDreamResultsID(await getDreamResults(dream.dreamID)))();
+    }
+  }
+  , [dream?.dreamID]);
+
+  return dreamResultsID;
+}
