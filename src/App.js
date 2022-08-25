@@ -5,8 +5,6 @@ import { DreamForm } from './DreamForm';
 import { getDreamResults, useDreams } from "./dreamStore";
 
 function App() {
-
-  
   return (
     <div className="App">
       <DreamsPlayer />
@@ -35,9 +33,7 @@ function DreamPlayer({ donePlaying, dream }) {
   console.log("dreamVideoURL", dreamVideoURL, data);
   return <>
   {JSON.stringify(data)}
-    <video controls onEnded={donePlaying} autoPlay playsInline muted >
-      <source src={dreamVideoURL} type="video/mp4" />
-    </video>
+    <video controls onEnded={donePlaying} autoPlay playsInline muted  src={dreamVideoURL} />
   </>
 }
 
