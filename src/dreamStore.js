@@ -51,7 +51,8 @@ export function useDreams() {
   
     const increaseDreamIndex = () => setDreamIndex((dreamIndex + 1) % dreams.length);
   
-    console.log("dreamIndex", dreamIndex)
+    console.log("dreamIndex", dreamIndex);
+    
     const currentDream = dreams[dreamIndex];
     
     return {currentDream, increaseDreamIndex};
