@@ -1,24 +1,42 @@
 import useIPFS from '@pollinations/ipfs/reactHooks/useIPFS';
+import { last } from 'ramda';
+import { useEffect } from 'react';
 import styled from 'styled-components';
-import { getDreamResults, useDreamResults, useDreams } from "../dreamStore";
+import { useDreamResults, useDreams } from "../dreamStore";
 
 
 export default function DreamPlayer() {
 
-    const { dreamVideoURL, increaseDreamIndex } = useDream()
+    const { dreamVideoURL, dreamText, increaseDreamIndex } = useDream()
   
+    console.log("dream", dreamText, "dreamVideoURL", dreamVideoURL);
+    
+    useEffect(() => {
+        if (!dreamVideoURL)
+            increaseDreamIndex();
+    }, [dreamVideoURL]);
+
+
     return <Container>
         { dreamVideoURL &&
-        <video 
-            onEnded={increaseDreamIndex} 
-            autoPlay 
-            playsInline 
-            muted 
-            src={dreamVideoURL}/>
+        <>
+            
+            <video 
+                onEnded={increaseDreamIndex} 
+                autoPlay 
+                playsInline 
+                muted 
+                src={dreamVideoURL}/>
+
+            <div><h1>{getLastDream(dreamText)}</h1></div>
+
+        </>
 
         }
     </Container>
 }
+
+const getLastDream = dreamPrompts => last(dreamPrompts?.split("\n"))
 
 const Container = styled.div`
 width: 100%;
@@ -37,11 +55,11 @@ video {
 
 
 function useDream(){
-    const { currentDream, increaseDreamIndex }  = useDreams();
+    const { currentDream, increaseDreamIndex } = useDreams();
     const dreamResultsID = useDreamResults(currentDream);
     const data = useIPFS(dreamResultsID);
     
     const dreamVideoURL = data?.output && data?.output["out_0.mp4"];
   
-    return { dreamVideoURL, increaseDreamIndex, dreamResultsID }
+    return { dreamVideoURL, dreamText: currentDream?.dream, increaseDreamIndex, dreamResultsID }
 }

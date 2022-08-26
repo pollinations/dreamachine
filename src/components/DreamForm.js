@@ -1,8 +1,8 @@
 import useAWSNode from '@pollinations/ipfs/reactHooks/useAWSNode';
 import { append, last, update } from "ramda";
 import { useState } from "react";
-import { getDreams, setDreams } from "../dreamStore";
 import styled from 'styled-components';
+import { getDreams, setDreams } from "../dreamStore";
 
 
 export default function DreamForm() {
@@ -58,9 +58,10 @@ border: none;
 `
 
 function useDreamDispatch(dreamPrompt){
+
   const { submitToAWS } = useAWSNode({});
   const [ isLoading, setLoading ] = useState(false);
-
+  
   const dispatchDream = async (event) => {
     event.preventDefault();
 
@@ -71,9 +72,7 @@ function useDreamDispatch(dreamPrompt){
     const lastDreamIndex = dreamsUntilNow.length - 1;
     const lastDream = dreamsUntilNow[lastDreamIndex];
 
-    const lastDreamPrompt = last(lastDream.dream.split("\n"));
-
-    const dreamWithLast = !lastDream ? dreamPrompt : `${lastDreamPrompt}\n${dreamPrompt}`;
+    const dreamWithLast = !lastDream ? dreamPrompt : `${getDestinationDream(lastDream.dream)}\n${dreamPrompt}`;
 
     const dreamsWithNewOne = append({ dream: dreamWithLast }, dreamsUntilNow);
 
@@ -82,7 +81,7 @@ function useDreamDispatch(dreamPrompt){
     console.log("dreamsWithNewOne", dreamsWithNewOne, "updating db");
     await setDreams(dreamsWithNewOne);
 
-    const { nodeID } = await submitToAWS({ prompts: dreamWithLast }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private");
+    const { nodeID } = await submitToAWS({ prompts: pimpDreamPrompts(dreamWithLast) }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private");
 
     const newDreams = update(currentDreamIndex,
       {
@@ -95,5 +94,11 @@ function useDreamDispatch(dreamPrompt){
     await setDreams(newDreams);
     setLoading(false)
   };
+  
   return { dispatchDream, isLoading };
 }
+
+const getDestinationDream = dreamPrompts => last(dreamPrompts?.split("\n"))
+
+
+const pimpDreamPrompts = (prompts) => prompts.split("\n").map(prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte.`).join("\n");

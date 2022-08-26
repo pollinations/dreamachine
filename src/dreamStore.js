@@ -6,7 +6,7 @@ import useInterval from "use-interval";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "documenta";
+export const dreamMachineName = "test2";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -49,11 +49,11 @@ export function useDreams() {
     const dreams = usePollDreams();
     const [dreamIndex, setDreamIndex] = useState(0);
   
-    const increaseDreamIndex = () => setDreamIndex((dreamIndex + 1) % dreams.length);
+    const increaseDreamIndex = () => dreams.length > 0 && setDreamIndex((dreamIndex + 1) % dreams.length);
   
-    console.log("dreamIndex", dreamIndex);
+    console.log("dreamIndex", dreamIndex, "dreams", dreams);
     
-    const currentDream = dreams[dreamIndex];
+    const currentDream = dreams && dreams[dreamIndex];
     
     return {currentDream, increaseDreamIndex};
   }
