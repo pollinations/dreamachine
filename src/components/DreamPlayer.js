@@ -10,11 +10,7 @@ export default function DreamPlayer() {
     const { dreamVideoURL, dreamText, increaseDreamIndex } = useDream()
   
     console.log("dream", dreamText, "dreamVideoURL", dreamVideoURL);
-    
-    useEffect(() => {
-        if (!dreamVideoURL)
-            increaseDreamIndex();
-    }, [dreamVideoURL]);
+
 
 
     return <Container>
@@ -61,5 +57,16 @@ function useDream(){
     
     const dreamVideoURL = data?.output && data?.output["out_0.mp4"];
   
-    return { dreamVideoURL, dreamText: currentDream?.dream, increaseDreamIndex, dreamResultsID }
+    useEffect(() => {
+        // rather strange condition here but it works
+        if (!dreamVideoURL && data.output && dreamResultsID)
+            increaseDreamIndex();
+    }, [dreamVideoURL, dreamResultsID]);
+
+    return { 
+        dreamVideoURL, 
+        dreamText: currentDream?.dream, 
+        increaseDreamIndex, 
+        dreamResultsID 
+    }
 }
