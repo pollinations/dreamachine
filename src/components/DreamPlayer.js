@@ -24,7 +24,7 @@ export default function DreamPlayer() {
                 muted 
                 src={dreamVideoURL}/>
 
-            <div><h1>{getLastDream(dreamText)}</h1></div>
+            <div style={{position: "absolute", right: "100px", top: "20px", padding:"50px"}}><h1>{getLastDream(dreamText)}</h1></div>
 
         </>
 
