@@ -1,6 +1,6 @@
 import useAWSNode from '@pollinations/ipfs/reactHooks/useAWSNode';
 import { append, last, update } from "ramda";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { getDreams, setDreams } from "../dreamStore";
 
@@ -10,9 +10,13 @@ export default function DreamForm() {
   const [dreamPrompt, setDreamPrompt] = useState("");
   const { dispatchDream, isLoading } = useDreamDispatch(dreamPrompt);
   
+  useEffect(() => {
+    if (!isLoading)
+      setDreamPrompt("");
+  }  ,[isLoading])
   return (
     <Form onSubmit={dispatchDream} >
-      <Input type="text" name="dream" onChange={event => setDreamPrompt(event.target.value)} disabled={isLoading} />
+      <Input type="text" name="dream" onChange={event => setDreamPrompt(event.target.value)} disabled={isLoading} value={dreamPrompt}/>
       <Button type="submit" disabled={isLoading}>
         <i>
           {isLoading ? 'Sending dream...' : 'Type your dream and hit enter'}
