@@ -81,9 +81,12 @@ function useDreamDispatch(dreamPrompt){
     console.log("dreamsWithNewOne", dreamsWithNewOne, "updating db");
     await setDreams(dreamsWithNewOne);
 
-    const { nodeID } = await submitToAWS({ prompts: pimpDreamPrompts(dreamWithLast) }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private");
+    const { nodeID } = await submitToAWS({ 
+      prompts: pimpDreamPrompts(dreamWithLast),
+      num_frames_per_prompt: 25,
+    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private");
 
-    const newDreams = update(currentDreamIndex,
+    const newDreams = update(currentDreamIndex  ,
       {
         dream: dreamWithLast,
         dreamID: nodeID,

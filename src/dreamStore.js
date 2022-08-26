@@ -36,10 +36,19 @@ function usePollDreams() {
       (async () => sDreams(await getDreams()))();
     }, []);
 
-    useInterval(async () => sDreams( await getDreams()), 5000);
+    useInterval(async () => {
+      
+      const newDreams = await getDreams();
+      // only update dreams if they are different
+      if (JSON.stringify(newDreams) !== JSON.stringify(dreams)) 
+        sDreams( newDreams );
+
+    }, 5000);
     return dreams;
   
 }
+
+
 
 
 // return dream and possibility to jump to the next dream
