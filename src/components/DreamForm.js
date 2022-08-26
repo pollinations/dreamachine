@@ -87,7 +87,8 @@ function useDreamDispatch(dreamPrompt){
 
     const { nodeID } = await submitToAWS({ 
       prompts: pimpDreamPrompts(dreamWithLast),
-      num_frames_per_prompt: 25,
+      num_frames_per_prompt: 35,
+      prompt_scale: 12,
     }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private");
 
     const newDreams = update(currentDreamIndex  ,
@@ -108,4 +109,9 @@ function useDreamDispatch(dreamPrompt){
 const getDestinationDream = dreamPrompts => last(dreamPrompts?.split("\n"))
 
 
-const pimpDreamPrompts = (prompts) => prompts.split("\n").map(prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte.`).join("\n");
+const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte.`;
+const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
+const risographPromptPimper3 = prompt => `Dream of ${prompt}. Risograph. Risograph.`;
+
+
+const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
