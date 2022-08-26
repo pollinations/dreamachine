@@ -14,7 +14,7 @@ export default function DreamPlayer() {
     useEffect(() => {
         if (!dreamVideoURL)
             increaseDreamIndex();
-    }, [dreamVideoURL]);
+    }, [dreamVideoURL, increaseDreamIndex]);
 
 
     return <Container>
