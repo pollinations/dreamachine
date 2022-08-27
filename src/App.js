@@ -1,6 +1,6 @@
-import DreamPlayer from './components/DreamPlayer';
-import DreamForm from './components/DreamForm';
 import { Route, Routes } from 'react-router-dom';
+import DreamForm from './components/DreamForm';
+import DreamPlayer from './components/DreamPlayer';
 
 function App() {
 
@@ -15,5 +15,6 @@ function App() {
   );
 }
 
+console.log("starting dreamachine...");
 
 export default App;
