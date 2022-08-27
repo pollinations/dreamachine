@@ -6,7 +6,7 @@ import useInterval from "use-interval";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "documenta_preparation_saturday_riso";
+export const dreamMachineName = "documenta_preparation_saturday_riso_2";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 

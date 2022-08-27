@@ -115,7 +115,7 @@ const getDestinationDream = dreamPrompts => last(dreamPrompts?.split("\n"))
 
 const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte.`;
 const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
-const risographPromptPimper3 = prompt => `${prompt}. Risograph print.`;
+const risographPromptPimper3 = prompt => `${prompt}. Risograph. Riso.`;
 
 
 const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
