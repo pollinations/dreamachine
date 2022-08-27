@@ -11,6 +11,9 @@ export default function DreamPlayer() {
   
     console.log("dream", dreamText, "dreamVideoURL", dreamVideoURL);
 
+    useEffect(() => {
+        speak(dreamText);
+    } ,[dreamText]);
 
 
     return <Container>
@@ -82,4 +85,18 @@ function useDream(){
         increaseDreamIndex, 
         dreamResultsID 
     }
+}
+
+
+
+
+const speak = (text) =>{ 
+        const utterance = new window.SpeechSynthesisUtterance(text)
+    
+        // select random voice
+        const voices = window.speechSynthesis.getVoices();
+        utterance.voice = voices[Math.floor(Math.random() * voices.length)];
+    
+        // return a method that can be called to speak the utterance
+        window.speechSynthesis.speak(utterance);
 }
