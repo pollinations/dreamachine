@@ -23,8 +23,10 @@ export default function DreamPlayer() {
                 playsInline 
                 muted 
                 src={dreamVideoURL}/>
-}
-            <Legenda>{getLastDream(dreamText)}</Legenda>
+
+            <Legenda>
+                {getLastDream(dreamText)}
+            </Legenda>
 
         </>
 
@@ -36,13 +38,10 @@ const getLastDream = dreamPrompts => last(dreamPrompts?.split("\n"))
 
 // brutalist css styling
 // with monospace font
-const Legenda = styled.h1`
-    position: absolute;
-    right: 100px;
+const Legenda = styled.p`
+    text-align: center;
     top: 20px;
     background: rgba(0, 0, 0, 0.8);
-    box-decoration-break: clone;    
-    font-family: source-code-pro, monospace;
     font-weight: 400;
     padding: 0.5em;
 `;
@@ -52,13 +51,14 @@ width: 100%;
 min-height: 100vh;
 
 display: flex;
+flex-direction: column;
 align-items: center;
 justify-content: center;
 position: fixed;
 
 video {
     width: 100%;
-    max-height: 100vh;
+    max-height: calc(100vh - 100px);
 }
 `
 

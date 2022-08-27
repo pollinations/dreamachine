@@ -1,11 +1,13 @@
 import useAWSNode from '@pollinations/ipfs/reactHooks/useAWSNode';
 import { append, last, update } from "ramda";
 import { useEffect, useState } from "react";
+import { useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import { getDreams, setDreams } from "../dreamStore";
 
 
 export default function DreamForm() {
+  const isMatch = useMatch('/submit')
 
   const [dreamPrompt, setDreamPrompt] = useState("");
   const { dispatchDream, isLoading } = useDreamDispatch(dreamPrompt);
@@ -14,8 +16,10 @@ export default function DreamForm() {
     if (!isLoading)
       setDreamPrompt("");
   }  ,[isLoading])
+
+  
   return (
-    <Form onSubmit={dispatchDream} >
+    <Form onSubmit={dispatchDream} isVisible={isMatch} >
       <Input type="text" name="dream" onChange={event => setDreamPrompt(event.target.value)} disabled={isLoading} value={dreamPrompt}/>
       <Button type="submit" disabled={isLoading}>
         <i>
@@ -30,7 +34,7 @@ const Form = styled.form`
 position: fixed;
 z-index: 1;
 max-width: 600px;
-display: flex;
+display: ${props => props.isVisible ? "flex" : "none"};
 flex-direction: column;
 gap: 1em;
 background-color: rgba(0, 0, 0, 0.8);
