@@ -83,7 +83,7 @@ function useDreamDispatch(dreamPrompt){
     const currentDreamIndex = dreamsWithNewOne.length - 1;
 
     console.log("dreamsWithNewOne", dreamsWithNewOne, "updating db");
-    await setDreams(dreamsWithNewOne);
+    // await setDreams(dreamsWithNewOne);
 
     const { nodeID } = await submitToAWS({ 
       prompts: pimpDreamPrompts(dreamWithLast),
