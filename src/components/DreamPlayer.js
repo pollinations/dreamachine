@@ -72,7 +72,7 @@ function useDream(){
   
     useEffect(() => {
         // rather strange condition here but it works
-        if (!dreamVideoURL && data?.output && dreamResultsID)
+        if (!dreamVideoURL && dreamResultsID)
             increaseDreamIndex();
     }, [dreamVideoURL, dreamResultsID]);
 
