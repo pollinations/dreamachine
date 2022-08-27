@@ -22,7 +22,7 @@ export const setDreams = async (dreams) => await dreamStore.set(dreamMachineName
 
 export const getDreamResults = async (dreamID) => {
     const pollens = await getPollens({input: dreamID});
-    return pollens[0].output;
+    return pollens[0]?.output;
 }
 
 initDreamStore();
@@ -71,7 +71,7 @@ export function useDreams() {
   // gets the output pollen content id for a given pollen input id
 export function useDreamResults(dream) {
   
-  const [dreamResultsID, setDreamResultsID] = useState(null);
+  const [dreamResultsID, setDreamResultsID] = useState(dream?.dreamID);
 
   useEffect(() => {
     if (dream?.dreamID) {

@@ -7,7 +7,7 @@ import { getDreams, setDreams } from "../dreamStore";
 
 
 export default function DreamForm() {
-  const isMatch = useMatch('/submit')
+  const isMatch = !useMatch('/view')
 
   const [dreamPrompt, setDreamPrompt] = useState("");
   const { dispatchDream, isLoading } = useDreamDispatch(dreamPrompt);
@@ -115,7 +115,7 @@ const getDestinationDream = dreamPrompts => last(dreamPrompts?.split("\n"))
 
 const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte.`;
 const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
-const risographPromptPimper3 = prompt => `Dream of ${prompt}. Risograph. Risograph.`;
+const risographPromptPimper3 = prompt => `${prompt}. Risograph print.`;
 
 
 const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");

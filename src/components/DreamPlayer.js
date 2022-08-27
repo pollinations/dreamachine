@@ -11,9 +11,9 @@ export default function DreamPlayer() {
   
     console.log("dream", dreamText, "dreamVideoURL", dreamVideoURL);
 
-    useEffect(() => {
-        speak(dreamText);
-    } ,[dreamText]);
+    // useEffect(() => {
+    //     speak(dreamText);
+    // } ,[dreamText]);
 
 
     return <Container>
@@ -75,7 +75,7 @@ function useDream(){
   
     useEffect(() => {
         // rather strange condition here but it works
-        if (!dreamVideoURL && dreamResultsID)
+        if (!data.loading && !dreamVideoURL)
             increaseDreamIndex();
     }, [dreamVideoURL, dreamResultsID]);
 
