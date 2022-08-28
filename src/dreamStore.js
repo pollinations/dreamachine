@@ -6,7 +6,7 @@ import useInterval from "use-interval";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "documenta_preparation_saturday_riso_2";
+export const dreamMachineName = "documenta_preparation_saturday_riso_3";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -29,7 +29,7 @@ initDreamStore();
 
 
 // poll dream store every 5 seconds and return the current state of dreams
-function usePollDreams() {
+export function useDreams() {
     const [dreams, sDreams] = useState([]);
 
     useEffect(() => {
@@ -51,34 +51,21 @@ function usePollDreams() {
 
 
 
-// return dream and possibility to jump to the next dream
-
-export function useDreams() {
-
-    const dreams = usePollDreams();
-    const [dreamIndex, setDreamIndex] = useState(0);
-  
-    const increaseDreamIndex = () => dreams.length > 0 && setDreamIndex((dreamIndex + 1) % dreams.length);
-  
-    console.log("dreamIndex", dreamIndex, "dreams", dreams);
-    
-    const currentDream = dreams && dreams[dreamIndex];
-    
-    return {currentDream, increaseDreamIndex};
-  }
-  
-  
   // gets the output pollen content id for a given pollen input id
-export function useDreamResults(dream) {
+export function useDreamResults(dreamID) {
+
   
-  const [dreamResultsID, setDreamResultsID] = useState(dream?.dreamID);
+  
+  const [dreamResultsID, setDreamResultsID] = useState(dreamID);
+
 
   useEffect(() => {
-    if (dream?.dreamID) {
-      (async () => setDreamResultsID(await getDreamResults(dream.dreamID)))();
+    if (dreamID) {
+      const artificialDelay = Math.floor(Math.random() * 5000);
+      setTimeout(async () => setDreamResultsID(await getDreamResults(dreamID)), artificialDelay);
     }
   }
-  , [dream?.dreamID]);
+  , [dreamID]);
 
   return dreamResultsID;
 }
