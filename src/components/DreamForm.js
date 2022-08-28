@@ -32,8 +32,8 @@ export default function DreamForm() {
         setLastSubmittedTime(new Date().getTime());
         dispatchDream(event);
       }} isVisible={isMatch} >
-      <h1>Pollinations Dreamachine @ Documenta</h1>
-      <p>You can submit any kind of dream. For example</p>
+      <h2>Pollinations Dreamachine @ Documenta</h2>
+      You can submit any kind of dream. For example
       <ul>
         <li>What you dreamed last night</li>
         <li>What you are dreaming of for the future</li>
@@ -66,7 +66,7 @@ background-color: rgba(0, 0, 0, 0.8);
 padding: 1.25em;
 border-radius: 0.5em;
 left: 0%;
-top: 100px;
+top: 0px;
 `
 const Input = styled.input`
 background-color: transparent;
