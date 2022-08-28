@@ -85,8 +85,8 @@ const Legenda = styled.p`
     position: absolute;
     background: rgba(0, 0, 0, 0.9);
     font-weight: 400;
-    font-size: 2em;
-    bottom: 0px;
+    font-size: 4em;
+    top: 0px;
     margin: 0 auto;
     width: 100%;
 `;
