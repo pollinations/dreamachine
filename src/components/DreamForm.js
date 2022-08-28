@@ -1,31 +1,58 @@
-import useAWSNode from '@pollinations/ipfs/reactHooks/useAWSNode';
-import { append, last, update } from "ramda";
-import { useEffect, useState } from "react";
+import { append } from "ramda";
+import { useState } from "react";
 import { useMatch } from 'react-router-dom';
 import styled from 'styled-components';
+import useInterval from "use-interval";
 import { getDreams, setDreams } from "../dreamStore";
+import useLocalStorage from "../useLocalStorage";
 
 
 export default function DreamForm() {
   const isMatch = !useMatch('/view')
 
-  const [dreamPrompt, setDreamPrompt] = useState("");
-  const { dispatchDream, isLoading } = useDreamDispatch(dreamPrompt);
-  
-  useEffect(() => {
-    if (!isLoading)
-      setDreamPrompt("");
-  }  ,[isLoading])
+  const [lastSubmittedTime, setLastSubmittedTime] = useLocalStorage("lastDreamSubmitTime", 0)
 
+  const [disabled, setDisabled] = useState(true)
+
+  useInterval(() => {
+    const now = new Date().getTime()
+    const timeSinceLastSubmit = now - lastSubmittedTime
+    console.log("timeSinceLastSubmit", timeSinceLastSubmit)
+    
+    setDisabled(timeSinceLastSubmit < 120000)
   
+  }, 1000)
+  
+  const [dreamPrompt, setDreamPrompt] = useState("");
+  const dispatchDream = useDreamDispatch(dreamPrompt, setDreamPrompt);
+
   return (
-    <Form onSubmit={dispatchDream} isVisible={isMatch} >
-      <Input type="text" name="dream" onChange={event => setDreamPrompt(event.target.value)} disabled={isLoading} value={dreamPrompt}/>
-      <Button type="submit" disabled={isLoading}>
-        <i>
-          {isLoading ? 'Sending dream...' : 'Type your dream and hit enter'}
-        </i>
+    <Form onSubmit={(event) => {
+        if (dreamPrompt.trim().length === 0) 
+          return;
+        setLastSubmittedTime(new Date().getTime());
+        dispatchDream(event);
+      }} isVisible={isMatch} >
+      <h1>Pollinations Dreamachine @ Documenta</h1>
+      <p>You can submit any kind of dream. For example</p>
+      <ul>
+        <li>What you dreamed last night</li>
+        <li>What you are dreaming of for the future</li>
+        <li>A psychedelic experience</li>
+      </ul>
+      <p>Enter your dream here and press ENTER (max 100 characters):</p>
+      <Input 
+        type="text" 
+        name="dream" 
+        onChange={event => setDreamPrompt(event.target.value)} 
+        value={dreamPrompt} 
+        maxLength={100} 
+        disabled={disabled}
+        />
+      {disabled && <p>Wait a little before submitting the next dream...</p>}
+      <Button type="submit">
       </Button>
+      <p>An AI will turn your dream into pictures. It should appear in the collective dream video in a few minutes...</p>
     </Form>
   );
 }
@@ -33,7 +60,6 @@ export default function DreamForm() {
 const Form = styled.form`
 position: fixed;
 z-index: 1;
-max-width: 600px;
 display: ${props => props.isVisible ? "flex" : "none"};
 flex-direction: column;
 gap: 1em;
@@ -41,11 +67,11 @@ background-color: rgba(0, 0, 0, 0.8);
 padding: 1.25em;
 border-radius: 0.5em;
 left: 0%;
-bottom: 0;
+top: 100px;
 `
 const Input = styled.input`
 background-color: transparent;
-font-size: 20px;
+font-size: 16px;
 padding: 0.5em;
 color: #888;
 border: none;
@@ -65,57 +91,26 @@ color: #888;
 border: none;
 `
 
-function useDreamDispatch(dreamPrompt){
+function useDreamDispatch(dreamText, setDreamPrompt){
 
-  const { submitToAWS } = useAWSNode({});
-  const [ isLoading, setLoading ] = useState(false);
-  
   const dispatchDream = async (event) => {
     event.preventDefault();
 
-    console.log("dispatching dream", dreamPrompt);
-    setLoading(true);
+    console.log("dispatching dream", dreamText);
+    
+    const dreamsUntilNow = await getDreams()
 
-    const dreamsUntilNow = await getDreams();
-    const lastDreamIndex = dreamsUntilNow.length - 1;
-    const lastDream = dreamsUntilNow[lastDreamIndex];
+    const newDreams = append({ 
+      dream: dreamText,
+    }, dreamsUntilNow)
+//       
+    console.log("dreamsWithNewOne", newDreams, "updating db")
 
-    const dreamWithLast = !lastDream ? dreamPrompt : `${getDestinationDream(lastDream.dream)}\n${dreamPrompt}`;
-
-    const dreamsWithNewOne = append({ dream: dreamWithLast }, dreamsUntilNow);
-
-    const currentDreamIndex = dreamsWithNewOne.length - 1;
-
-    console.log("dreamsWithNewOne", dreamsWithNewOne, "updating db");
-    // await setDreams(dreamsWithNewOne);
-
-    const { nodeID } = await submitToAWS({ 
-      prompts: pimpDreamPrompts(dreamWithLast),
-      num_frames_per_prompt: 20,
-      prompt_scale: 12,
-    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private");
-
-    const newDreams = update(currentDreamIndex  ,
-      {
-        dream: dreamWithLast,
-        dreamID: nodeID,
-      },
-      dreamsWithNewOne);
-
-    console.log("dream submitted, nodeID:", nodeID, "new dreams:", newDreams);
-    await setDreams(newDreams);
-    setLoading(false)
+    await setDreams(newDreams)
+    setDreamPrompt("")
   };
   
-  return { dispatchDream, isLoading };
+  return dispatchDream;
 }
 
-const getDestinationDream = dreamPrompts => last(dreamPrompts?.split("\n"))
 
-
-const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte.`;
-const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
-const risographPromptPimper3 = prompt => `${prompt}. Risograph. Risograph.`;
-
-
-const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");

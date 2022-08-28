@@ -1,59 +1,55 @@
-import useIPFS from '@pollinations/ipfs/reactHooks/useIPFS';
-import { last } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useDreamResults, useDreams } from "../dreamStore";
+import { useDreams } from "../dreamStore";
 
 
 export default function DreamsPlayer() {
 
-    const { dreams, index, nextDream } = useDreamsWithIndex();
+    const { dreams, index, nextDream } = useDreamsWithIndex()
 
+    console.log("dreamsPlayer dreams", dreams)
 
-    // useEffect(() => {
-    //     speak(dreamText);
-    // } ,[dreamText]);
+    const dream = dreams[index]
 
+    if (!dream)
+        return <h1>loading first dream...</h1>
 
     return <Container>
-        { dreams.map((dream, dreamIndex) => 
+        {/* { dreams.map((dream, dreamIndex) =>  */}
             <Dream 
                 dream={dream} 
-                key={dreamIndex}
-                visible={dreamIndex === index}
+                key={dream.dream}
                 next={nextDream}
             />
-        ) }
+        {/* ) } */}
     </Container>
 }
 
-function Dream({ dream, visible, next }) {
-    const { videoURL, text } = useDream(dream)
+function Dream({ dream,  next }) {
+    const { videoURL, dream: text } = dream
 
-    if (visible)
-        console.log("visible dream", text, "dreamVideoURL", videoURL)
-    
-    useEffect(() => {
-        if (!videoURL)
-            setTimeout(() => next(), 1000) 
-            // next()
-    }, [videoURL])
+
+    console.log("visible dream", text, "dreamVideoURL", videoURL)
 
     const videoRef = useRef(null);
 
     useEffect(() => {
         if (videoRef.current) {
-            videoRef.current.play();
+            // videoRef.current.play();
             videoRef.current.playbackRate = 0.5;
         }
-    } ,[visible])
+    } ,[videoRef.current])
     
-    return <div style={{display: visible ? "block" : "none"}}>   
+    return <div style={{
+        // display: visible ? "block" : "none", 
+        width:"100%", height:"100%"}}>   
+        <DreamBanner />
         <video 
             onEnded={next} 
-            // autoPlay 
+            autoPlay 
             playsInline 
             muted 
+            // controls
             src={videoURL}
             ref={videoRef}
             />
@@ -64,49 +60,63 @@ function Dream({ dream, visible, next }) {
     </div>
 }
 
-const getLastDream = dreamPrompts => last(dreamPrompts?.split("\n"))
+let showBannerNum =0;
+
+function DreamBanner() {
+    const [visible, setVisible] = useState(false)
+    useEffect(() => {
+        showBannerNum++;
+        if (showBannerNum % 3 === 0) {
+            setTimeout(() => {
+                setVisible(true)
+            } ,5000)
+        }
+        setTimeout(() => {
+            setVisible(false)
+        } ,10000)
+    },[])
+    return <URL style={{display: visible ? "":"none"}}>Submit your dream @ <b>dreamachine.pollinations.ai</b></URL>
+}
 
 // brutalist css styling
 // with monospace font
 const Legenda = styled.p`
     text-align: center;
-    top: 20px;
-    background: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
     font-weight: 400;
     padding: 0.5em;
     font-size: 2em;
+    bottom: 0px;
+    margin: 0 auto;
+    width: 100%;
+`;
+
+const URL = styled.p`
+    text-align: center;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    font-weight: 400;
+    padding: 0.5em;
+    font-size: 2em;
+    top: 0px;
+    margin: 0 auto;
+    width: 100%;
 `;
 
 const Container = styled.div`
 width: 100%;
-min-height: 100vh;
-
-display: flex;
-flex-direction: column;
+height: 100%;
 align-items: center;
 justify-content: center;
-position: fixed;
+position: relative;
 
 video {
     width: 100%;
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 0px);
 }
 `
 
-
-function useDream(dream){
-
-    const dreamResultsID = useDreamResults(dream.dreamID)
-    const data = useIPFS(dreamResultsID)
-    console.log("dreamResultsID", dreamResultsID, "data", data)
-    const videoURL = data?.output && data?.output["out_0.mp4"]
-  
-    return { 
-        videoURL, 
-        text: dream ? getLastDream(dream.dream) : "", 
-        dreamResultsID
-    }
-}
 
 
 
