@@ -7,10 +7,8 @@ function App() {
   
   return (
     <Routes>
-      <Route path='*' element={<>
-        <DreamForm />
-        <DreamPlayer />
-      </> }/>
+      <Route path='/' element={<DreamForm />} />
+      <Route path='/view' element={<DreamPlayer />}/>
     </Routes>
   );
 }
