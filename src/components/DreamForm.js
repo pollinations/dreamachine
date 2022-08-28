@@ -17,7 +17,6 @@ export default function DreamForm() {
   useInterval(() => {
     const now = new Date().getTime()
     const timeSinceLastSubmit = now - lastSubmittedTime
-    console.log("timeSinceLastSubmit", timeSinceLastSubmit)
     
     setDisabled(timeSinceLastSubmit < 120000)
   
@@ -38,18 +37,18 @@ export default function DreamForm() {
       <ul>
         <li>What you dreamed last night</li>
         <li>What you are dreaming of for the future</li>
-        <li>A psychedelic experience</li>
+        <li>A dreamy psychedelic experience</li>
       </ul>
-      <p>Enter your dream here and press ENTER (max 100 characters):</p>
+      <p>Enter your dream here and press ENTER (max 150 characters):</p>
       <Input 
         type="text" 
         name="dream" 
         onChange={event => setDreamPrompt(event.target.value)} 
         value={dreamPrompt} 
-        maxLength={100} 
+        maxLength={150} 
         disabled={disabled}
         />
-      {disabled && <p>Wait a little before submitting the next dream...</p>}
+      {disabled && <p><b>Wait a little before submitting the next dream...</b></p>}
       <Button type="submit">
       </Button>
       <p>An AI will turn your dream into pictures. It should appear in the collective dream video in a few minutes...</p>
