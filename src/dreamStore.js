@@ -83,7 +83,9 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
 export function useDreams() {
     const [dreams, sDreams] = useState([]);
 
-    // console.log(dreams)
+
+    console.log(dreams)
+
     useEffect(() => {
       (async () => sDreams(await loadDreams()))();
     }, []);
