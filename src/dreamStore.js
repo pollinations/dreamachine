@@ -42,7 +42,7 @@ const loadDream = memoize(dreamPrompt => {
     runModel({ 
       prompts: dreamPrompt,
       num_frames_per_prompt: 25,
-      prompt_scale: 12,
+      // prompt_scale: 12,
     }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private")
     .then(data => {
       const videoURL = data?.output && data?.output["out_0.mp4"]
@@ -115,7 +115,7 @@ const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarw
 const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
 const risographPromptPimper3 = prompt => `${prompt}. Risograph. Risograph.`;
 const retroFuturisticPromptPimper4 = prompt => `${prompt}. Retro futurist poster. detail render, realistic maya, octane render, rtx, photo `;
-const photoRealistcPolaroidPimper = prompt => `${prompt}. vintage polaroid photo, uhd, 1 2 k, hyper realistic, ultra realistic, photo realistic, photography, ray tracing, octane render, vray render, weta digital, unreal engine 5`;
+const vintagePhotoPimper = prompt => `Vintage polaroid photo of ${prompt}. highly detailed shot, eerie 8 k uhd. dreamy`;
 
 // const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
 
@@ -125,5 +125,5 @@ const timeBasedPromptPimper = prompt => {
   if (minute < 10) return surrealistPromptPimper1(prompt);
   if (minute < 20) return surrealistPromptPimper2(prompt);
   if (minute < 40) return risographPromptPimper3(prompt);
-  return photoRealistcPolaroidPimper(prompt);
+  return vintagePhotoPimper(prompt);
 }

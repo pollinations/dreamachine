@@ -66,14 +66,14 @@ function DreamBanner() {
     const [visible, setVisible] = useState(false)
     useEffect(() => {
         showBannerNum++;
-        if (showBannerNum % 3 === 0) {
+        if (showBannerNum % 2 === 0) {
             setTimeout(() => {
                 setVisible(true)
-            } ,10000)
+            } ,5000)
         }
         setTimeout(() => {
             setVisible(false)
-        } ,10000)
+        } ,15000)
     },[])
     return <URL style={{display: visible ? "":"none"}}>Submit your dream @ <b>dreamachine.pollinations.ai</b></URL>
 }
@@ -125,7 +125,7 @@ video {
 export function useDreamsWithIndex() {
 
     const allDreams = useDreams();
-    const dreams = allDreams.slice(-5);
+    const dreams = allDreams.slice(-8);
     const [index, setIndex] = useState(0);
   
     const nextDream = () => dreams.length > 0 && setIndex((index + 1) % dreams.length);
