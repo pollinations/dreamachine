@@ -18,7 +18,7 @@ export default function DreamForm() {
     const now = new Date().getTime()
     const timeSinceLastSubmit = now - lastSubmittedTime
     
-    setDisabled(timeSinceLastSubmit < 120000)
+    setDisabled(timeSinceLastSubmit < 5000)
   
   }, 1000)
   
@@ -33,12 +33,6 @@ export default function DreamForm() {
         dispatchDream(event);
       }} isVisible={isMatch} >
       <h2>Pollinations Dreamachine @ Documenta</h2>
-      You can submit any kind of dream. For example
-      <ul>
-        <li>What you dreamed last night</li>
-        <li>What you are dreaming of for the future</li>
-        <li>A dreamy psychedelic experience</li>
-      </ul>
       <p>Enter your dream here and press ENTER (max 150 characters):</p>
       <Input 
         type="text" 
@@ -51,6 +45,12 @@ export default function DreamForm() {
       {disabled && <p><b>Wait a little before submitting the next dream...</b></p>}
       <Button type="submit">
       </Button>
+      You can submit any kind of dream. For example
+      <ul>
+        <li>What you dreamed last night</li>
+        <li>What you are dreaming of for the future</li>
+        <li>A dreamy psychedelic experience</li>
+      </ul>
       <p>An AI will turn your dream into pictures. It should appear in the collective dream video in a few minutes...</p>
     </Form>
   );
@@ -98,7 +98,7 @@ function useDreamDispatch(dreamText, setDreamPrompt){
     console.log("dispatching dream", dreamText);
     
     const dreamsUntilNow = await getDreams()
-
+    console.log("got previous dreams", dreamsUntilNow);
     const newDreams = append({ 
       dream: dreamText,
     }, dreamsUntilNow)
