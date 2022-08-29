@@ -9,7 +9,7 @@ import promiseQueue from "./promiseQueue";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "documenta_monday_photo_2";
+export const dreamMachineName = "documenta_fridericianum_performance_1";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
