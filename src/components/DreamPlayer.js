@@ -42,7 +42,7 @@ function Dream({ dream,  next }) {
     
     return <div style={{
         // display: visible ? "block" : "none", 
-        width:"100%", height:"100%"}}>   
+        maxWidth:"100%", height:"100%"}}>   
         <DreamBanner />
         <video 
             onEnded={next} 
@@ -89,6 +89,7 @@ const Legenda = styled.p`
     bottom: 0px;
     margin: 0 auto;
     width: 100%;
+    max-width: 100%;
 `;
 
 const URL = styled.p`
