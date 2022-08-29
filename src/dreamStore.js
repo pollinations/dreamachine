@@ -1,5 +1,6 @@
 import runModel, { getPollens } from "@pollinations/ipfs/awsPollenRunner";
 import Store from "@pollinations/ipfs/pollenStore";
+import awaitSleep from "await-sleep";
 import memoize from "lodash.memoize";
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
@@ -37,7 +38,8 @@ const loadDream = memoize(dreamPrompt => {
   }
 
   promiseQueue(() => {
-    return runModel({ 
+    console.log("running model for dream", dreamPrompt);
+    runModel({ 
       prompts: dreamPrompt,
       num_frames_per_prompt: 25,
       prompt_scale: 12,
@@ -48,6 +50,7 @@ const loadDream = memoize(dreamPrompt => {
       result.videoURL = videoURL;
       result.loading = false;
     })
+    return awaitSleep(2000);
   })
   
   return result
