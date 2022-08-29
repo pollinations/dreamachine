@@ -32,8 +32,10 @@ export default function DreamForm() {
         setLastSubmittedTime(new Date().getTime());
         dispatchDream(event);
       }} isVisible={isMatch} >
+        <a href='https://pollinations.ai'>
         <img style={{width: 200, margin:'2em 0'}}
         src='https://pollinations.ai/static/media/logo_light_4.adf04cb01f922bffd8ab.png' alt="pollinations"/>
+      </a>
       <h2>Dreamachine - Documenta 15</h2>
       <p>An AI will turn your dream into pictures. It should appear in the collective dream video in a few minutes...</p>
       You can submit any kind of dream. For example:
@@ -51,7 +53,7 @@ export default function DreamForm() {
         maxLength={150} 
         disabled={disabled}
         />
-      {disabled && <p><b>Wait a little before submitting the next dream...</b></p>}
+      {disabled ?? <p><b>Wait a little before submitting the next dream...</b></p>}
       <CreateButton type="submit" disabled={disabled}>
         Submit
       </CreateButton>
