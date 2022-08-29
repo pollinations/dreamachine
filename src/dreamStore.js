@@ -42,6 +42,7 @@ const loadDream = memoize(dreamPrompt => {
     runModel({ 
       prompts: dreamPrompt,
       num_frames_per_prompt: 25,
+      random_seed: 28
       // prompt_scale: 12,
     }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private")
     .then(data => {
