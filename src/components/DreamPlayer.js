@@ -49,7 +49,7 @@ function Dream({ dream,  next }) {
             autoPlay 
             playsInline 
             muted 
-            // controls
+            controls
             src={videoURL}
             ref={videoRef}
             />
