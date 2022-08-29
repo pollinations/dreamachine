@@ -42,7 +42,7 @@ export default function DreamForm() {
         <li>What you are dreaming of for the future? </li>
         <li>A dreamy psychedelic experience? </li>
       </ul>
-      <p>Enter your dream here:</p>
+      <p>Enter your dream here (max 150 characters):</p>
       <Input 
         type="text" 
         name="dream" 
