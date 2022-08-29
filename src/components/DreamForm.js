@@ -18,7 +18,7 @@ export default function DreamForm() {
     const now = new Date().getTime()
     const timeSinceLastSubmit = now - lastSubmittedTime
     
-    setDisabled(timeSinceLastSubmit < 5000)
+    setDisabled(timeSinceLastSubmit < 60000)
   
   }, 1000)
   
@@ -51,9 +51,9 @@ export default function DreamForm() {
         onChange={event => setDreamPrompt(event.target.value)} 
         value={dreamPrompt} 
         maxLength={150} 
-        disabled={disabled}
+        // disabled={disabled}
         />
-      {disabled ?? <p><b>Wait a little before submitting the next dream...</b></p>}
+      {disabled && <p><b>Wait a little before submitting the next dream...</b></p>}
       <CreateButton type="submit" disabled={disabled}>
         Submit
       </CreateButton>
