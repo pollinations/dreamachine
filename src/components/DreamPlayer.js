@@ -69,7 +69,7 @@ function DreamBanner() {
         if (showBannerNum % 3 === 0) {
             setTimeout(() => {
                 setVisible(true)
-            } ,5000)
+            } ,10000)
         }
         setTimeout(() => {
             setVisible(false)
@@ -85,7 +85,7 @@ const Legenda = styled.p`
     position: absolute;
     background: rgba(0, 0, 0, 0.9);
     font-weight: 400;
-    font-size: 2em;
+    font-size: 2.5em;
     bottom: 0px;
     margin: 0 auto;
     width: 100%;
@@ -97,7 +97,7 @@ const URL = styled.p`
     background: rgba(0, 0, 0, 0.9);
     font-weight: 400;
     padding: 0.5em;
-    font-size: 2em;
+    font-size: 2.5em;
     top: 0px;
     margin: 0 auto;
     width: 100%;
@@ -124,7 +124,8 @@ video {
 
 export function useDreamsWithIndex() {
 
-    const dreams = useDreams();
+    const allDreams = useDreams();
+    const dreams = allDreams.slice(-5);
     const [index, setIndex] = useState(0);
   
     const nextDream = () => dreams.length > 0 && setIndex((index + 1) % dreams.length);

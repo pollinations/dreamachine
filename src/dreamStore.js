@@ -1,14 +1,14 @@
 import runModel, { getPollens } from "@pollinations/ipfs/awsPollenRunner";
 import Store from "@pollinations/ipfs/pollenStore";
 import memoize from "lodash.memoize";
-import { update } from "ramda";
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
+import promiseQueue from "./promiseQueue";
 
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "documenta_preparation_saturday_riso_5";
+export const dreamMachineName = "documenta_monday_photo_2";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -36,16 +36,18 @@ const loadDream = memoize(dreamPrompt => {
     videoURL: null
   }
 
-  runModel({ 
-    prompts: dreamPrompt,
-    num_frames_per_prompt: 25,
-    prompt_scale: 12,
-  }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private")
-  .then(data => {
-    const videoURL = data?.output && data?.output["out_0.mp4"]
-    console.log("loaded dream", dreamPrompt, videoURL)
-    result.videoURL = videoURL;
-    result.loading = false;
+  promiseQueue(() => {
+    return runModel({ 
+      prompts: dreamPrompt,
+      num_frames_per_prompt: 25,
+      prompt_scale: 12,
+    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private")
+    .then(data => {
+      const videoURL = data?.output && data?.output["out_0.mp4"]
+      console.log("loaded dream", dreamPrompt, videoURL)
+      result.videoURL = videoURL;
+      result.loading = false;
+    })
   })
   
   return result
@@ -53,8 +55,9 @@ const loadDream = memoize(dreamPrompt => {
 
 export async function loadDreams() {
     const dreams = await getDreams()
-    return dreams
-            .map(buildPromptAndLoadDream)
+    const newDreams = dreams.map(buildPromptAndLoadDream)
+    await setDreams(newDreams)
+    return newDreams;
             // .filter(dream => !dream.loading)
             //.map(({result, ...dream}) => ({...dream, ...result}))
 }
@@ -67,14 +70,10 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
   const previousDream = dreams[i-1]?.dream || dream.dream
   const compositePrompt = 
               [previousDream, dream.dream]
-              .map(risographPromptPimper3)
+              .map(timeBasedPromptPimper)
               .join("\n")
               
   const dreamWithResults =  {...dream, ...loadDream(compositePrompt) }
-
-  const updatedDreams = update(i, dreamWithResults, dreams)
-
-  setDreams(updatedDreams)
 
   return dreamWithResults
 }
@@ -87,19 +86,21 @@ export function useDreams() {
     console.log(dreams)
 
     useEffect(() => {
-      (async () => sDreams(await loadDreams()))();
+      (async () => sDreams((await loadDreams()).filter(({loading}) => loading === false)))();
     }, []);
 
     useInterval(async () => {
       
       const newDreams = await loadDreams();
+      console.log("loaded dreams", newDreams)
+      const newDreamsFiltered = newDreams.filter(({loading}) => loading === false)
       // only update dreams if they are different
-      if (JSON.stringify(newDreams) !== JSON.stringify(dreams)) 
-        sDreams( newDreams );
+      if (JSON.stringify(newDreamsFiltered) !== JSON.stringify(dreams)) 
+        sDreams( newDreamsFiltered );
 
-    }, 5000);
+    }, 30000);
     
-    return dreams.filter(({loading}) => loading === false);
+    return dreams;
   
 }
 
@@ -110,6 +111,16 @@ export function useDreams() {
 const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte.`;
 const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
 const risographPromptPimper3 = prompt => `${prompt}. Risograph. Risograph.`;
-
+const retroFuturisticPromptPimper4 = prompt => `${prompt}. Retro futurist poster. detail render, realistic maya, octane render, rtx, photo `;
+const photoRealistcPolaroidPimper = prompt => `${prompt}. vintage polaroid photo, uhd, 1 2 k, hyper realistic, ultra realistic, photo realistic, photography, ray tracing, octane render, vray render, weta digital, unreal engine 5`;
 
 // const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
+
+// execute one of the previously defined promptPimpers depending on the minute of the hour
+const timeBasedPromptPimper = prompt => {
+  const minute = new Date().getMinutes();
+  if (minute < 10) return surrealistPromptPimper1(prompt);
+  if (minute < 20) return surrealistPromptPimper2(prompt);
+  if (minute < 40) return risographPromptPimper3(prompt);
+  return photoRealistcPolaroidPimper(prompt);
+}
