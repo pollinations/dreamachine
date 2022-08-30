@@ -49,7 +49,7 @@ function Dream({ dream,  next }) {
             autoPlay 
             playsInline 
             muted 
-            controls
+            // controls
             src={videoURL}
             ref={videoRef}
             />
@@ -63,7 +63,7 @@ function Dream({ dream,  next }) {
 let showBannerNum =0;
 
 function DreamBanner() {
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(true)
     useEffect(() => {
         showBannerNum++;
         if (showBannerNum % 2 === 0) {
@@ -72,10 +72,10 @@ function DreamBanner() {
             } ,5000)
         }
         setTimeout(() => {
-            setVisible(false)
+            setVisible(true)
         } ,15000)
     },[])
-    return <URL style={{display: visible ? "":"none"}}>Submit your dream @ <b>dreamachine.pollinations.ai</b></URL>
+    return <URL style={{display: visible ? "":"none"}}>Send your dream <span style={{fontSize:"60%"}}>(and see it come to life)</span>: <b>https://dreamachine.pollinations.ai</b></URL>
 }
 
 // brutalist css styling
@@ -85,8 +85,8 @@ const Legenda = styled.p`
     position: absolute;
     background: rgba(0, 0, 0, 0.9);
     font-weight: 400;
-    font-size: 2.5em;
-    bottom: 0px;
+    font-size: 3.5em;
+    top: 00px;
     margin: 0 auto;
     width: 100%;
 `;
@@ -98,7 +98,7 @@ const URL = styled.p`
     font-weight: 400;
     padding: 0.5em;
     font-size: 2.5em;
-    top: 0px;
+    bottom: 0px;
     margin: 0 auto;
     width: 100%;
 `;
