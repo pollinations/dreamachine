@@ -9,7 +9,7 @@ import promiseQueue from "./promiseQueue";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "documenta_fridericianum_performance_2";
+export const dreamMachineName = "documenta_fridericianum_performance_4";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -74,7 +74,7 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
   const previousDream = dreams[i-1]?.dream || dream.dream
   const compositePrompt = 
               [previousDream, dream.dream]
-              .map(timeBasedPromptPimper)
+              .map(vintagePhotoPimper)
               .join("\n")
               
   const dreamWithResults =  {...dream, ...loadDream(compositePrompt) }

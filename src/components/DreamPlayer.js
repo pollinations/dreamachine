@@ -125,7 +125,7 @@ video {
 export function useDreamsWithIndex() {
 
     const allDreams = useDreams();
-    const dreams = allDreams.slice(-8);
+    const dreams = allDreams.slice(-15);
     const [index, setIndex] = useState(0);
   
     const nextDream = () => dreams.length > 0 && setIndex((index + 1) % dreams.length);
