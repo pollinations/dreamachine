@@ -36,7 +36,7 @@ export default function DreamForm() {
         <img style={{width: 200, margin:'2em 0'}}
         src='https://pollinations.ai/static/media/logo_light_4.adf04cb01f922bffd8ab.png' alt="pollinations"/>
       </a>
-      <h2>Dreamachine - Documenta 15</h2>
+      <h2>Dreamachine - Conscious Madness</h2>
       <p>An AI will turn your dream into pictures. It should appear in the collective dream video in a few minutes...</p>
       You can submit any kind of dream. For example:
       <ul>

@@ -74,7 +74,7 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
   const previousDream = dreams[i-1]?.dream || dream.dream
   const compositePrompt = 
               [previousDream, dream.dream]
-              .map(vintagePhotoPimper)
+              .map(surrealistPromptPimper1)
               .join("\n")
               
   const dreamWithResults =  {...dream, ...loadDream(compositePrompt) }

@@ -36,14 +36,14 @@ function Dream({ dream,  next }) {
     useEffect(() => {
         if (videoRef.current) {
             // videoRef.current.play();
-            videoRef.current.playbackRate = 0.5;
+            videoRef.current.playbackRate = 1;
         }
     } ,[videoRef.current])
     
     return <div style={{
         // display: visible ? "block" : "none", 
         width:"100%", height:"100%"}}>   
-        <DreamBanner />
+        {/* <DreamBanner /> */}
         <video 
             onEnded={next} 
             autoPlay 
@@ -75,7 +75,7 @@ function DreamBanner() {
             setVisible(true)
         } ,15000)
     },[])
-    return <URL style={{display: visible ? "":"none"}}>Send your dream <span style={{fontSize:"60%"}}>(and see it come to life)</span>: <b>https://dreamachine.pollinations.ai</b></URL>
+    return <URL style={{display: visible ? "":"none"}}>Send your dream: <b>https://dreamachine.pollinations.ai</b></URL>
 }
 
 // brutalist css styling
@@ -85,7 +85,7 @@ const Legenda = styled.p`
     position: absolute;
     background: rgba(0, 0, 0, 0.9);
     font-weight: 400;
-    font-size: 3.5em;
+    font-size: 2em;
     top: 00px;
     margin: 0 auto;
     width: 100%;
@@ -125,7 +125,7 @@ video {
 export function useDreamsWithIndex() {
 
     const allDreams = useDreams();
-    const dreams = allDreams.slice(-15);
+    const dreams = allDreams //.slice(-4);
     const [index, setIndex] = useState(0);
   
     const nextDream = () => dreams.length > 0 && setIndex((index + 1) % dreams.length);
