@@ -99,9 +99,9 @@ function DreamBanner() {
 const Legenda = styled.p`
     text-align: center;
     position: absolute;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.3);
     font-weight: 400;
-    font-size: 2.5em;
+    font-size: 4vw;
     top: 00px;
     margin: 0 auto;
     width: 100%;
@@ -110,10 +110,10 @@ const Legenda = styled.p`
 const URL = styled.p`
     text-align: center;
     position: absolute;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.3);
     font-weight: 400;
     padding: 0.5em;
-    font-size: 2em;
+    font-size: 3vw;
     bottom: 0px;
     margin: 0 auto;
     width: 100%;
