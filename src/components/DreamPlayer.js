@@ -58,7 +58,7 @@ function Dream({ dream, previousDream, next }) {
     return <div style={{
         // display: visible ? "block" : "none", 
         width:"100%", height:"100%"}}>   
-        {/* <DreamBanner /> */}
+        <DreamBanner />
         <video 
             onEnded={next} 
             autoPlay 
@@ -99,7 +99,7 @@ function DreamBanner() {
 const Legenda = styled.p`
     text-align: center;
     position: absolute;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.4);
     font-weight: 400;
     font-size: 2em;
     top: 00px;
@@ -110,10 +110,10 @@ const Legenda = styled.p`
 const URL = styled.p`
     text-align: center;
     position: absolute;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.4);
     font-weight: 400;
     padding: 0.5em;
-    font-size: 2.5em;
+    font-size: 2em;
     bottom: 0px;
     margin: 0 auto;
     width: 100%;
