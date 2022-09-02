@@ -9,6 +9,7 @@ function App() {
     <Routes>
       <Route path='/' element={<DreamForm />} />
       <Route path='/view/:lastN' element={<DreamPlayer />}/>
+      <Route path='/view' element={<DreamPlayer />}/>
     </Routes>
   );
 }
