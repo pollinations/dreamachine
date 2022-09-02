@@ -6,12 +6,14 @@ import { useDreams } from "../dreamStore";
 
 export default function DreamsPlayer() {
 
-    const { lastN } = useParams()
+    const { lastN=99 } = useParams()
     const { dreams, index, nextDream } = useDreamsWithIndex(lastN)
 
     console.log("dreamsPlayer dreams", dreams)
 
     const dream = dreams[index]
+
+    const previousDream = dreams[index-1] || dream
 
     if (!dream)
         return <h1>loading first dream...</h1>
@@ -19,7 +21,8 @@ export default function DreamsPlayer() {
     return <Container>
         {/* { dreams.map((dream, dreamIndex) =>  */}
             <Dream 
-                dream={dream} 
+                dream={dream}
+                previousDream={previousDream}
                 key={dream.dream}
                 next={nextDream}
             />
@@ -27,9 +30,11 @@ export default function DreamsPlayer() {
     </Container>
 }
 
-function Dream({ dream,  next }) {
-    const { videoURL, dream: text } = dream
+function Dream({ dream, previousDream, next }) {
+    const { videoURL, dream : nextText } = dream
+    const { dream : previousText } = previousDream
 
+    const [text, setText] = useState(previousText)
 
     console.log("visible dream", text, "dreamVideoURL", videoURL)
 
@@ -41,7 +46,15 @@ function Dream({ dream,  next }) {
             videoRef.current.playbackRate = 1;
         }
     } ,[videoRef.current])
-    
+
+
+    const onPlay = ({ target }) => {
+        // get video duration
+        const duration = target.duration;
+        setTimeout(() => {
+            setText(nextText)
+        }, Math.round((duration * 1000) / 2));
+    }
     return <div style={{
         // display: visible ? "block" : "none", 
         width:"100%", height:"100%"}}>   
@@ -54,6 +67,7 @@ function Dream({ dream,  next }) {
             // controls
             src={videoURL}
             ref={videoRef}
+            onPlay={onPlay}
             />
 
         <Legenda>
