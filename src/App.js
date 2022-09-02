@@ -8,7 +8,7 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<DreamForm />} />
-      <Route path='/view' element={<DreamPlayer />}/>
+      <Route path='/view/:lastN' element={<DreamPlayer />}/>
     </Routes>
   );
 }

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDreams } from "../dreamStore";
 
 
 export default function DreamsPlayer() {
 
-    const { dreams, index, nextDream } = useDreamsWithIndex()
+    const { lastN } = useParams()
+    const { dreams, index, nextDream } = useDreamsWithIndex(lastN)
 
     console.log("dreamsPlayer dreams", dreams)
 
@@ -122,10 +124,10 @@ video {
 
 // return dream and possibility to jump to the next dream
 
-export function useDreamsWithIndex() {
+export function useDreamsWithIndex(lastN=4) {
 
     const allDreams = useDreams();
-    const dreams = allDreams //.slice(-4);
+    const dreams = allDreams.slice(-1 * lastN);
     const [index, setIndex] = useState(0);
   
     const nextDream = () => dreams.length > 0 && setIndex((index + 1) % dreams.length);
