@@ -9,7 +9,7 @@ import promiseQueue from "./promiseQueue";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "gaswerksiedlung_birthday_2";
+export const dreamMachineName = "gws_rizzo";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -45,21 +45,22 @@ const loadDream = memoize(dreamPrompt => {
       random_seed: 50,
       width: 768
       // prompt_scale: 12,
-    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private", {priority: 1})
+    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private", false, {priority: 1})
     .then(data => {
       const videoURL = data?.output && data?.output["out_0.mp4"]
       console.log("loaded dream", dreamPrompt, videoURL)
       result.videoURL = videoURL;
       result.loading = false;
     })
-    return awaitSleep(2000);
+    return awaitSleep(5000);
   })
   
   return result
 })
 
 export async function loadDreams() {
-    const dreams = await getDreams()
+    const dreams = (await getDreams())//.slice(0,5)
+    console.log("got dreams", dreams)
     const newDreams = dreams.map(buildPromptAndLoadDream)
     await setDreams(newDreams)
     return newDreams;
@@ -75,7 +76,7 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
   const previousDream = dreams[i-1]?.dream
   const compositePrompt = 
               (previousDream ? [previousDream, dream.dream] : [dream.dream])
-              .map(timeBasedPromptPimper)
+              .map(risographPromptPimper3)
               .join("\n")
               
   const dreamWithResults =  {...dream, ...loadDream(compositePrompt) }
@@ -103,7 +104,7 @@ export function useDreams(dreamFilter=filterDreams) {
       if (JSON.stringify(newDreamsFiltered) !== JSON.stringify(dreams)) 
         sDreams( newDreamsFiltered );
 
-    }, 30000);
+    }, 10000);
     
     return dreams;
   
