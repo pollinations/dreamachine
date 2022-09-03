@@ -79,13 +79,13 @@ function Dream({ dream, previousDream, next }) {
 let showBannerNum =0;
 
 function DreamBanner() {
-    const [visible, setVisible] = useState(true)
+    const [visible, setVisible] = useState(false)
     useEffect(() => {
         showBannerNum++;
         if (showBannerNum % 2 === 0) {
             setTimeout(() => {
                 setVisible(true)
-            } ,5000)
+            } ,2000)
         }
         setTimeout(() => {
             setVisible(true)

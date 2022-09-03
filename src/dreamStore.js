@@ -43,7 +43,7 @@ const loadDream = memoize(dreamPrompt => {
       prompts: dreamPrompt,
       num_frames_per_prompt: -30,
       random_seed: 28,
-      width: 896
+      width: 768
       // prompt_scale: 12,
     }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private", {priority: 1})
     .then(data => {
@@ -84,21 +84,21 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
 }
 
 // poll dream store every 5 seconds and return the current state of dreams
-export function useDreams() {
+export function useDreams(dreamFilter=filterDreams) {
     const [dreams, sDreams] = useState([]);
 
 
     console.log(dreams)
 
     useEffect(() => {
-      (async () => sDreams((await loadDreams()).filter(({loading}) => loading === false)))();
+      (async () => sDreams((await loadDreams()).filter(dreamFilter)))();
     }, []);
 
     useInterval(async () => {
       
       const newDreams = await loadDreams();
       console.log("loaded dreams", newDreams)
-      const newDreamsFiltered = newDreams.filter(({loading}) => loading === false)
+      const newDreamsFiltered = newDreams.filter(dreamFilter)
       // only update dreams if they are different
       if (JSON.stringify(newDreamsFiltered) !== JSON.stringify(dreams)) 
         sDreams( newDreamsFiltered );
@@ -109,11 +109,12 @@ export function useDreams() {
   
 }
 
+const filterDreams = ({loading, videoURL}) => loading === false && videoURL
 
 
 
 
-const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte.`;
+const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte. SFW`;
 const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
 const risographPromptPimper3 = prompt => `${prompt}. Risograph. Risograph.`;
 const retroFuturisticPromptPimper4 = prompt => `${prompt}. Retro futurist poster. detail render, realistic maya, octane render, rtx, photo `;
@@ -124,8 +125,8 @@ const vintagePhotoPimper = prompt => `Vintage polaroid photo of ${prompt}. highl
 // execute one of the previously defined promptPimpers depending on the minute of the hour
 const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
-  if (minute < 10) return surrealistPromptPimper1(prompt);
-  if (minute < 20) return surrealistPromptPimper2(prompt);
-  if (minute < 40) return risographPromptPimper3(prompt);
+  if (minute < 40) return surrealistPromptPimper1(prompt);
+  if (minute < 50) return surrealistPromptPimper2(prompt);
+  if (minute < 60) return risographPromptPimper3(prompt);
   return vintagePhotoPimper(prompt);
 }
