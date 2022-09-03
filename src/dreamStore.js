@@ -75,7 +75,7 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
   const previousDream = dreams[i-1]?.dream
   const compositePrompt = 
               (previousDream ? [previousDream, dream.dream] : [dream.dream])
-              .map(surrealistPromptPimper1)
+              .map(timeBasedPromptPimper)
               .join("\n")
               
   const dreamWithResults =  {...dream, ...loadDream(compositePrompt) }
@@ -114,8 +114,8 @@ const filterDreams = ({loading, videoURL}) => loading === false && videoURL
 
 
 
-const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. Surrealism. Klarwein, Dali, Magritte. SFW`;
-const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
+const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. ${prompt}. Surrealism. Klarwein, Dali, Magritte`;
+const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
 const risographPromptPimper3 = prompt => `${prompt}. Risograph. Risograph.`;
 const retroFuturisticPromptPimper4 = prompt => `${prompt}. Retro futurist poster. detail render, realistic maya, octane render, rtx, photo `;
 const vintagePhotoPimper = prompt => `Vintage polaroid photo of ${prompt}. highly detailed shot, eerie 8 k uhd. dreamy`;
