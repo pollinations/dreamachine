@@ -1,16 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useDreams } from "../dreamStore";
+import { useDreams } from '../dreamStore';
 
 export function TwoDreamsPlayer() {
- return <div style={{position: "relative"}}><div  style={{position: "absolute"}}><DreamsPlayer/></div><div  style={{position: "absolute", left: "50%", top:"0px"}}><DreamsPlayer /></div></div>
+const allDreams = useDreams();
+ return <div style={{position: "relative"}}>
+    <div  style={{position: "absolute"}}>
+        <DreamsPlayer allDreams={allDreams} />
+    </div>
+    <div  style={{position: "absolute", left: "50%", top:"0px"}}>
+        <DreamsPlayer start_offset={8} allDreams={allDreams} />
+    </div></div>
 }
 
-export function DreamsPlayer() {
+export function DreamsPlayer({allDreams, start_offset = 0}) {
 
     const { lastN=99 } = useParams()
-    const { dreams, index, nextDream } = useDreamsWithIndex(lastN)
+    const { dreams, index, nextDream } = useDreamsWithIndex(allDreams,lastN, start_offset)
 
     console.log("dreamsPlayer dreams", dreams)
 
@@ -61,7 +68,7 @@ function Dream({ dream, previousDream, next }) {
     return <div style={{
         // display: visible ? "block" : "none", 
         width:"100%", height:"100%"}}>   
-        <DreamBanner />
+        {/* <DreamBanner /> */}
         <video 
             onEnded={next} 
             autoPlay 
@@ -141,11 +148,10 @@ video {
 
 // return dream and possibility to jump to the next dream
 
-export function useDreamsWithIndex(lastN=4) {
+export function useDreamsWithIndex(allDreams, lastN=4, start_offset = 0) {
 
-    const allDreams = useDreams();
     const dreams = allDreams.slice(-1 * lastN);
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState(start_offset);
   
     const nextDream = () => dreams.length > 0 && setIndex((index + 1) % dreams.length);
   
