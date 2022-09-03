@@ -125,8 +125,8 @@ const vintagePhotoPimper = prompt => `Vintage polaroid photo of ${prompt}. highl
 // execute one of the previously defined promptPimpers depending on the minute of the hour
 const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
-  if (minute < 40) return surrealistPromptPimper1(prompt);
-  if (minute < 50) return surrealistPromptPimper2(prompt);
+  if (minute < 20) return surrealistPromptPimper1(prompt);
+  if (minute < 40) return surrealistPromptPimper2(prompt);
   if (minute < 60) return risographPromptPimper3(prompt);
   return vintagePhotoPimper(prompt);
 }
