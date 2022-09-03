@@ -53,7 +53,7 @@ function Dream({ dream, previousDream, next }) {
     useEffect(() => {
         if (videoRef.current) {
             // videoRef.current.play();
-            videoRef.current.playbackRate = 1;
+            videoRef.current.playbackRate = 0.7;
         }
     } ,[videoRef.current])
 
