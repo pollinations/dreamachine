@@ -9,7 +9,7 @@ import promiseQueue from "./promiseQueue";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "documenta_fridericianum_performance_4";
+export const dreamMachineName = "gaswerksiedlung_birthday";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -41,10 +41,11 @@ const loadDream = memoize(dreamPrompt => {
     console.log("running model for dream", dreamPrompt);
     runModel({ 
       prompts: dreamPrompt,
-      num_frames_per_prompt: 25,
-      random_seed: 28
+      num_frames_per_prompt: -30,
+      random_seed: 28,
+      width: 896
       // prompt_scale: 12,
-    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private")
+    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private", {priority: 1})
     .then(data => {
       const videoURL = data?.output && data?.output["out_0.mp4"]
       console.log("loaded dream", dreamPrompt, videoURL)
@@ -71,9 +72,9 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
   if (dream.loading === false)
     return dream;
     
-  const previousDream = dreams[i-1]?.dream || dream.dream
+  const previousDream = dreams[i-1]?.dream
   const compositePrompt = 
-              [previousDream, dream.dream]
+              (previousDream ? [previousDream, dream.dream] : [dream.dream])
               .map(surrealistPromptPimper1)
               .join("\n")
               
