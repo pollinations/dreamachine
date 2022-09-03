@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import DreamForm from './components/DreamForm';
-import DreamPlayer from './components/DreamPlayer';
+import { TwoDreamsPlayer } from './components/DreamPlayer';
 
 function App() {
 
@@ -8,8 +8,8 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<DreamForm />} />
-      <Route path='/view/:lastN' element={<DreamPlayer />}/>
-      <Route path='/view' element={<DreamPlayer />}/>
+      <Route path='/view/:lastN' element={<TwoDreamsPlayer />}/>
+      <Route path='/view' element={<TwoDreamsPlayer />}/>
     </Routes>
   );
 }

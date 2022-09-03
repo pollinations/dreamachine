@@ -3,8 +3,11 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDreams } from "../dreamStore";
 
+export function TwoDreamsPlayer() {
+ return <div style={{position: "relative"}}><div  style={{position: "absolute"}}><DreamsPlayer/></div><div  style={{position: "absolute", left: "50%", top:"0px"}}><DreamsPlayer /></div></div>
+}
 
-export default function DreamsPlayer() {
+export function DreamsPlayer() {
 
     const { lastN=99 } = useParams()
     const { dreams, index, nextDream } = useDreamsWithIndex(lastN)
@@ -101,7 +104,7 @@ const Legenda = styled.p`
     position: absolute;
     background: rgba(0, 0, 0, 0.3);
     font-weight: 400;
-    font-size: 4vw;
+    font-size: 2vw;
     top: 00px;
     margin: 0 auto;
     width: 100%;
@@ -113,7 +116,7 @@ const URL = styled.p`
     background: rgba(0, 0, 0, 0.3);
     font-weight: 400;
     padding: 0.5em;
-    font-size: 3vw;
+    font-size: 1.5vw;
     bottom: 0px;
     margin: 0 auto;
     width: 100%;
