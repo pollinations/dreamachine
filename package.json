@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@pollinations/ipfs": "github:pollinations/pollinations-ipfs",
+    "@pollinations/ipfs": "github:pollinations/pollinations-ipfs#main",
     "await-sleep": "^0.0.1",
     "lodash.memoize": "^4.1.2",
     "ramda": "^0.28.0",
