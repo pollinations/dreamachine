@@ -17,8 +17,6 @@ export default function DreamsPlayer() {
 
     const previousDream = dreams[index-1] || dream
 
-    const nextDreamForBuffering = dreams[(index+1) % dreams.length]
-
     if (!dream)
         return <h1>loading first dream...</h1>
 
@@ -27,15 +25,14 @@ export default function DreamsPlayer() {
             <Dream 
                 dream={dream}
                 previousDream={previousDream}
-                nextDreamForBuffering={nextDreamForBuffering}
                 key={dream.dream}
                 next={nextDream}
-                canvas={canvasRef.current}
+                canvasRef={canvasRef}
             />
     </Container>
 }
 
-function Dream({ dream, previousDream, next, nextDreamForBuffering, canvas }) {
+function Dream({ dream, previousDream, next,  canvasRef }) {
     const { videoURL, dream : nextText } = dream
     const { dream : previousText } = previousDream
 
@@ -48,6 +45,7 @@ function Dream({ dream, previousDream, next, nextDreamForBuffering, canvas }) {
     useInterval(() => {
         // draw image form video to canvas
         const video = videoRef.current
+        const canvas = canvasRef.current
         if (video && canvas) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -69,9 +67,7 @@ function Dream({ dream, previousDream, next, nextDreamForBuffering, canvas }) {
             setText(nextText)
         }, Math.round((duration * 1000) / 2));
     }
-    return <div style={{
-        // display: visible ? "block" : "none", 
-        width:"100%", height:"100%"}}>   
+    return <div style={{width:"100%", height:"100%"}}>   
         <DreamBanner />
         <video 
             onEnded={next} 
@@ -83,11 +79,7 @@ function Dream({ dream, previousDream, next, nextDreamForBuffering, canvas }) {
             ref={videoRef}
             onPlay={onPlay}
             // hidden
-            style={{visibility: "hidden"}}
-            />
-        <video 
-            src={nextDreamForBuffering.videoURL}
-            style={{display: "none"}}
+            // style={{visibility: "hidden"}}
             />
 
         <Legenda>
