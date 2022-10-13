@@ -1,91 +1,88 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import useInterval from 'use-interval';
 import { useDreams } from "../dreamStore";
 
 
 export default function DreamsPlayer() {
 
     const { lastN=99 } = useParams()
-    const { dreams, index, nextDream } = useDreamsWithIndex(lastN)
+    const { dreams, index, nextDream: triggerNextDream } = useDreamsWithIndex(lastN)
+    const [activePlayer, setActivePlayer] = useState(-1);
 
-    const canvasRef= useRef(null);
+    const videoRefs = [useRef(null), useRef(null)]
+
+
     console.log("dreamsPlayer dreams", dreams)
 
     const dream = dreams[index]
 
-    const previousDream = dreams[index-1] || dream
+    const [text, setText] = useState("---")
+    const nextDream = dreams[(index + 1) % dreams.length]
+
+    
+    const triggerNextDreamAndTogglerPlayer = () => {
+        triggerNextDream()
+        setActivePlayer(1-activePlayer)
+    }
+
+
+    useEffect(() => {
+        if (dreams.length > 1 && activePlayer === -1) {
+            videoRefs[0].current.src = dream.videoURL
+            videoRefs[1].current.src = nextDream.videoURL
+            console.log(dream.videoURL, nextDream.videoURL)
+            setActivePlayer(0)
+        }
+
+    }, [activePlayer, dream])
+
+    useEffect(() => {
+        if (activePlayer !== -1) {
+            console.log("activePlayer", activePlayer)
+            videoRefs[0].current.playbackRate = 2;
+            videoRefs[1].current.playbackRate = 2;
+            videoRefs[1-activePlayer].current.pause()
+            videoRefs[1-activePlayer].current.currentTime = 0
+            videoRefs[1-activePlayer].current.src = nextDream.videoURL
+            videoRefs[1-activePlayer].current.style.zIndex = -2
+            videoRefs[activePlayer].current.play()
+            videoRefs[activePlayer].current.style.zIndex = -1
+
+            const duration = videoRefs[activePlayer].current.duration;
+            setTimeout(() => {
+                setText(dream.dream)
+            }, Math.round((duration * 1000) / 2));
+        }
+        
+    }, [activePlayer])
 
     if (!dream)
         return <h1>loading first dream...</h1>
 
     return <Container>
-            <canvas ref={canvasRef} width="768" height="512"/>
-            <Dream 
-                dream={dream}
-                previousDream={previousDream}
-                key={dream.dream}
-                next={nextDream}
-                canvasRef={canvasRef}
-            />
+        <div style={{width:"100%", height:"100%", position:"relative"}}>   
+        <DreamBanner />
+            <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglerPlayer} />
+            <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglerPlayer} />
+        </div>
+        <Legenda>
+             {text}
+        </Legenda>
     </Container>
 }
 
-function Dream({ dream, previousDream, next,  canvasRef }) {
-    const { videoURL, dream : nextText } = dream
-    const { dream : previousText } = previousDream
-
-    const [text, setText] = useState(previousText)
-
-    console.log("visible dream", text, "dreamVideoURL", videoURL)
-
-    const videoRef = useRef(null);
-
-    useInterval(() => {
-        // draw image form video to canvas
-        const video = videoRef.current
-        const canvas = canvasRef.current
-        if (video && canvas) {
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        }
-    }, 100);
-
-    useEffect(() => {
-        if (videoRef.current) {
-            // videoRef.current.play();
-            videoRef.current.playbackRate = 2;
-        }
-    } ,[videoRef.current])
-
-
-    const onPlay = ({ target }) => {
-        // get video duration
-        const duration = target.duration;
-        setTimeout(() => {
-            setText(nextText)
-        }, 0);//Math.round((duration * 1000) / 2));
-    }
-    return <div style={{width:"100%", height:"100%"}}>   
-        <DreamBanner />
-        <video 
-            onEnded={next} 
-            autoPlay 
-            playsInline 
-            muted 
-            // controls
-            src={videoURL}
-            ref={videoRef}
-            onPlay={onPlay}
-            // hidden
-            // style={{visibility: "hidden"}}
-            />
-
-        <Legenda>
-            {text}
-        </Legenda>
-    </div>
+const VideoPlayer = ({playerRef, onEnded}) => {
+   return <video 
+    onEnded={onEnded} 
+    playsInline 
+    muted 
+    // controls
+    ref={playerRef}
+    preload="auto"
+    // hidden
+    style={{position: "absolute"}}
+    />
 }
 
 let showBannerNum =0;
