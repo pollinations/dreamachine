@@ -45,7 +45,7 @@ const loadDream = memoize(dreamPrompt => {
       random_seed: 50,
       width: 768
       // prompt_scale: 12,
-    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private", false, {priority: 5})
+    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private", false, {priority: 6})
     .then(data => {
       const videoURL = data?.output && data?.output["out_0.mp4"]
       console.log("loaded dream", dreamPrompt, videoURL)
