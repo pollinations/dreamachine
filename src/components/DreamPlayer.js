@@ -55,7 +55,7 @@ function Dream({ dream, previousDream, next,  canvasRef }) {
     useEffect(() => {
         if (videoRef.current) {
             // videoRef.current.play();
-            videoRef.current.playbackRate = 3;
+            videoRef.current.playbackRate = 2;
         }
     } ,[videoRef.current])
 
