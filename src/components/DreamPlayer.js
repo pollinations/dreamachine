@@ -55,7 +55,7 @@ function Dream({ dream, previousDream, next,  canvasRef }) {
     useEffect(() => {
         if (videoRef.current) {
             // videoRef.current.play();
-            videoRef.current.playbackRate = 0.7;
+            videoRef.current.playbackRate = 3;
         }
     } ,[videoRef.current])
 
@@ -65,7 +65,7 @@ function Dream({ dream, previousDream, next,  canvasRef }) {
         const duration = target.duration;
         setTimeout(() => {
             setText(nextText)
-        }, Math.round((duration * 1000) / 2));
+        }, 0);//Math.round((duration * 1000) / 2));
     }
     return <div style={{width:"100%", height:"100%"}}>   
         <DreamBanner />
