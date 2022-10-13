@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import useInterval from 'use-interval';
 import { useDreams } from "../dreamStore";
 
 
@@ -9,28 +10,32 @@ export default function DreamsPlayer() {
     const { lastN=99 } = useParams()
     const { dreams, index, nextDream } = useDreamsWithIndex(lastN)
 
+    const canvasRef= useRef(null);
     console.log("dreamsPlayer dreams", dreams)
 
     const dream = dreams[index]
 
     const previousDream = dreams[index-1] || dream
 
+    const nextDreamForBuffering = dreams[(index+1) % dreams.length]
+
     if (!dream)
         return <h1>loading first dream...</h1>
 
     return <Container>
-        {/* { dreams.map((dream, dreamIndex) =>  */}
+            <canvas ref={canvasRef} width="768" height="512"/>
             <Dream 
                 dream={dream}
                 previousDream={previousDream}
+                nextDreamForBuffering={nextDreamForBuffering}
                 key={dream.dream}
                 next={nextDream}
+                canvas={canvasRef.current}
             />
-        {/* ) } */}
     </Container>
 }
 
-function Dream({ dream, previousDream, next }) {
+function Dream({ dream, previousDream, next, nextDreamForBuffering, canvas }) {
     const { videoURL, dream : nextText } = dream
     const { dream : previousText } = previousDream
 
@@ -39,6 +44,15 @@ function Dream({ dream, previousDream, next }) {
     console.log("visible dream", text, "dreamVideoURL", videoURL)
 
     const videoRef = useRef(null);
+
+    useInterval(() => {
+        // draw image form video to canvas
+        const video = videoRef.current
+        if (video && canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        }
+    }, 100);
 
     useEffect(() => {
         if (videoRef.current) {
@@ -68,6 +82,12 @@ function Dream({ dream, previousDream, next }) {
             src={videoURL}
             ref={videoRef}
             onPlay={onPlay}
+            // hidden
+            style={{visibility: "hidden"}}
+            />
+        <video 
+            src={nextDreamForBuffering.videoURL}
+            style={{display: "none"}}
             />
 
         <Legenda>

@@ -18,7 +18,7 @@ export default function DreamForm() {
     const now = new Date().getTime()
     const timeSinceLastSubmit = now - lastSubmittedTime
     
-    setDisabled(timeSinceLastSubmit < 15000)
+    setDisabled(timeSinceLastSubmit < 100)
   
   }, 1000)
   

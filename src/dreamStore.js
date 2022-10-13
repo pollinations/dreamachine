@@ -9,7 +9,7 @@ import promiseQueue from "./promiseQueue";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "gws_rizzo";
+export const dreamMachineName = "solarpunkDreamMachine"
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -76,7 +76,7 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
   const previousDream = dreams[i-1]?.dream
   const compositePrompt = 
               (previousDream ? [previousDream, dream.dream] : [dream.dream])
-              .map(risographPromptPimper3)
+              .map(solarPunkPromptPimper)
               .join("\n")
               
   const dreamWithResults =  {...dream, ...loadDream(compositePrompt) }
@@ -120,6 +120,8 @@ const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. ${prompt}. Beauti
 const risographPromptPimper3 = prompt => `${prompt}. Risograph. Risograph.`;
 const retroFuturisticPromptPimper4 = prompt => `${prompt}. Retro futurist poster. detail render, realistic maya, octane render, rtx, photo `;
 const vintagePhotoPimper = prompt => `Vintage polaroid photo of ${prompt}. highly detailed shot, eerie 8 k uhd. dreamy`;
+const solarPunkPromptPimper = prompt => `A solarpunk ${prompt}, high resolution, neon lights, light and shadow`;
+
 
 // const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
 
@@ -129,5 +131,5 @@ const timeBasedPromptPimper = prompt => {
   if (minute < 20) return surrealistPromptPimper1(prompt);
   if (minute < 40) return surrealistPromptPimper2(prompt);
   if (minute < 60) return risographPromptPimper3(prompt);
-  return vintagePhotoPimper(prompt);
+  return solarPunkPromptPimper(prompt);
 }
