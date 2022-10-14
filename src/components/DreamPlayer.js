@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDreams } from "../dreamStore";
 
+const playbackRate = 2;
 
 export default function DreamsPlayer() {
 
@@ -21,7 +22,7 @@ export default function DreamsPlayer() {
     const nextDream = dreams[(index + 1) % dreams.length]
 
     
-    const triggerNextDreamAndTogglerPlayer = () => {
+    const triggerNextDreamAndTogglePlayer = () => {
         triggerNextDream()
         setActivePlayer(1-activePlayer)
     }
@@ -40,8 +41,8 @@ export default function DreamsPlayer() {
     useEffect(() => {
         if (activePlayer !== -1) {
             console.log("activePlayer", activePlayer)
-            videoRefs[0].current.playbackRate = 2;
-            videoRefs[1].current.playbackRate = 2;
+            videoRefs[0].current.playbackRate = playbackRate;
+            videoRefs[1].current.playbackRate = playbackRate;
             videoRefs[1-activePlayer].current.pause()
             videoRefs[1-activePlayer].current.currentTime = 0
             videoRefs[1-activePlayer].current.src = nextDream.videoURL
@@ -50,9 +51,10 @@ export default function DreamsPlayer() {
             videoRefs[activePlayer].current.style.zIndex = -1
 
             const duration = videoRefs[activePlayer].current.duration;
+            console.log("duration", duration)
             setTimeout(() => {
                 setText(dream.dream)
-            }, Math.round((duration * 1000) / 2));
+            }, Math.round((duration * 1000) / (2 * playbackRate)));
         }
         
     }, [activePlayer])
@@ -63,8 +65,8 @@ export default function DreamsPlayer() {
     return <Container>
         <div style={{width:"100%", height:"100%", position:"relative"}}>   
         <DreamBanner />
-            <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglerPlayer} />
-            <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglerPlayer} />
+            <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglePlayer} />
+            <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglePlayer} />
         </div>
         <Legenda>
              {text}

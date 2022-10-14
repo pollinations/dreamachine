@@ -9,7 +9,7 @@ import promiseQueue from "./promiseQueue";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "testing303"
+export const dreamMachineName = "testing305"
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -53,7 +53,7 @@ const loadDream = memoize(dreamPrompt => {
       result.videoURL = videoURL;
       result.loading = false;
     })
-    return awaitSleep(5000);
+    return awaitSleep(15000);
   })
   
   return result
