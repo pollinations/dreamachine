@@ -64,13 +64,13 @@ export default function DreamsPlayer() {
 
     return <Container>
         <div style={{width:"100%", height:"100%", position:"relative"}}>   
-        <DreamBanner />
+        {/* <DreamBanner /> */}
             <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglePlayer} />
             <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglePlayer} />
         </div>
-        <Legenda>
+        {/* <Legenda>
              {text}
-        </Legenda>
+        </Legenda> */}
     </Container>
 }
 
