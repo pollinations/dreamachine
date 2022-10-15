@@ -113,8 +113,8 @@ const Legenda = styled.p`
     position: absolute;
     background: rgba(0, 0, 0, 0.35);
     font-weight: 400;
-    font-size: 4vw;
-    top: 00px;
+    font-size: 3vw;
+    bottom: 00px;
     margin: 0 auto;
     width: 100%;
 `;
@@ -126,7 +126,7 @@ const URL = styled.p`
     font-weight: 400;
     padding: 0.5em;
     font-size: 2vw;
-    bottom: 0px;
+    top: 0px;
     margin: 0 auto;
     width: 100%;
 `;
