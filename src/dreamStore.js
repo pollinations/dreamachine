@@ -9,7 +9,8 @@ import promiseQueue from "./promiseQueue";
 const dreamStore = Store("dreamachine");
 
 
-export const dreamMachineName = "test_elliot"
+// dream machine name from local storage
+export const dreamMachineName = localStorage.getItem("dream") || "dreamachine";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
