@@ -50,7 +50,7 @@ export default function DreamForm() {
         name="dream" 
         onChange={event => setDreamPrompt(event.target.value)} 
         value={dreamPrompt} 
-        maxLength={150} 
+        maxLength={1500} 
         // disabled={disabled}
         />
       {disabled && <p><b>Wait a little before submitting the next dream...</b></p>}
