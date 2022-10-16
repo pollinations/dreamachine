@@ -33,11 +33,11 @@ export default function DreamForm() {
         dispatchDream(event);
       }} isVisible={isMatch} >
         <a href='https://pollinations.ai'>
-        <img style={{width: 200, margin:'2em 0'}}
+        <img style={{width: 200, margin:'2em 0', align: center}}
         src='https://i.imgur.com/TtlWIYp.png' alt="pollinations"/>
       </a>
-      <h2>Dreamachine</h2>
-      <p>An AI will turn your dream into pictures. It should appear in the collective dream video in a few minutes...</p>
+      <h1>Dreamachine</h1>
+      <p>Pollinations will turn your dream into pictures using a chain of AI models. It should appear in the collective dream video in a few minutes...</p>
       You can submit any kind of dream. For example:
       <ul>
         <li>What you dreamed last night?</li>
@@ -120,7 +120,7 @@ top: 0px;
 width: 95%;
 max-width: 600px;
 margin: 0 auto;
-text-align: center;
+text-align: left;
 
 // img {
 //   width: 200px;
