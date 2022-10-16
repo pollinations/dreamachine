@@ -80,7 +80,7 @@ object-fit: initial;
 const CreateButton = styled.button`
 
 width: 129px;
-height: 130;
+height: 52px;
 background: #D8E449;
 border-radius: 40px;
 
@@ -115,7 +115,7 @@ padding: 0 1.25em;
 border-radius: 0.5em;
 left: 0%;
 top: 0px;
-
+height: 52px;
 width: 95%;
 max-width: 600px;
 margin: 0 auto;
