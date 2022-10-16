@@ -34,7 +34,7 @@ export default function DreamForm() {
       }} isVisible={isMatch} >
         <a href='https://pollinations.ai'>
         <img style={{width: 200, margin:'2em 0'}}
-        src='https://pollinations.ai/static/media/logo_light_4.adf04cb01f922bffd8ab.png' alt="pollinations"/>
+        src='https://imgur.com/e9qyVb3' alt="pollinations"/>
       </a>
       <h2>Dreamachine</h2>
       <p>An AI will turn your dream into pictures. It should appear in the collective dream video in a few minutes...</p>
