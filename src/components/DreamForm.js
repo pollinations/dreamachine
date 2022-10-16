@@ -58,7 +58,7 @@ export default function DreamForm() {
         Submit
       </CreateButton>
       <BackGroundImage 
-          src='https://i.imgur.com/e9qyVb3.png'
+          src='https://i.imgur.com/ylF6m8L.png'
           top='auto'
           zIndex='-1' 
           alt="hero_bg_overlay" />
@@ -120,7 +120,7 @@ top: 0px;
 width: 95%;
 max-width: 600px;
 margin: 0 auto;
-text-align: left;
+text-align: center;
 
 // img {
 //   width: 200px;
