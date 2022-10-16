@@ -34,7 +34,7 @@ export default function DreamForm() {
       }} isVisible={isMatch} >
         <a href='https://pollinations.ai'>
         <img style={{width: 200, margin:'2em 0'}}
-        src='https://imgur.com/e9qyVb3' alt="pollinations"/>
+        src='https://imgur.com/TtlWIYp' alt="pollinations"/>
       </a>
       <h2>Dreamachine</h2>
       <p>An AI will turn your dream into pictures. It should appear in the collective dream video in a few minutes...</p>
@@ -44,7 +44,7 @@ export default function DreamForm() {
         <li>What you are dreaming of for the future? </li>
         <li>A dreamy psychedelic experience? </li>
       </ul>
-      <p>Enter your dream here (max 150 characters):</p>
+      <p>Enter your dream here:</p>
       <Input 
         type="text" 
         name="dream" 
@@ -58,7 +58,7 @@ export default function DreamForm() {
         Submit
       </CreateButton>
       <BackGroundImage 
-          src='https://pollinations.ai/static/media/bgherooverlay.d7c737d250b29f33ecde.jpeg'
+          src='https://imgur.com/e9qyVb3'
           top='auto'
           zIndex='-1' 
           alt="hero_bg_overlay" />
