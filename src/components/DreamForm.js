@@ -75,7 +75,7 @@ opacity: ${props => props.opacity || 1};
 z-index: ${props => props.zIndex || 0};
 mix-blend-mode: ${props => props.blend || 'normal'};
 transform: ${props => props.transform || ''};
-object-fit: cover;
+object-fit: initial;
 `
 const CreateButton = styled.button`
 
@@ -135,7 +135,7 @@ font-size: 16px;
 padding: 0.5em;
 color: #fff;
 border: none;
-border-radius: 0.1em;
+border-radius: 2em;
 background-color: rgba(50, 50, 50, 0.5);
 
 :disabled {
