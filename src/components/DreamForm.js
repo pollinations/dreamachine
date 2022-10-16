@@ -33,7 +33,7 @@ export default function DreamForm() {
         dispatchDream(event);
       }} isVisible={isMatch} >
         <a href='https://pollinations.ai'>
-        <img style={{width: 200, margin:'2em 0', align: center}}
+        <img style={{width: 200, margin:'2em 0'}}
         src='https://i.imgur.com/TtlWIYp.png' alt="pollinations"/>
       </a>
       <h1>Dreamachine</h1>
@@ -80,14 +80,13 @@ object-fit: initial;
 const CreateButton = styled.button`
 
 width: 129px;
-height: 52;
+height: 130;
 background: #D8E449;
 border-radius: 40px;
 
 // margin-left: ${props => props.marginLeft || 'calc(-129px - 0.5em)'};
 
 border: none;
-
 font-family: 'DM Sans';
 font-style: normal;
 font-weight: 700;
