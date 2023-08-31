@@ -36,15 +36,15 @@ export default function DreamForm() {
         <img style={{width: 200, margin:'2em 0'}}
         src='https://i.imgur.com/TtlWIYp.png' alt="pollinations"/>
       </a>
-      <h1>Dreamachine</h1>
-      <p>Pollinations will turn your dream into pictures using a chain of AI models. It should appear in the collective dream video in a few minutes...</p>
+      <h1>A-Live º INTERACTION</h1>
+      <p>Pollinations will turn your idea into pictures using a chain of AI models. It should appear in the collective video in a few minutes...</p>
       You can submit any kind of dream. For example:
       <ul>
         <li>What you dreamed last night?</li>
         <li>What you are dreaming of for the future? </li>
         <li>A dreamy psychedelic experience? </li>
       </ul>
-      <p>Enter your dream here:</p>
+      <p>Type here:</p>
       <Input 
         type="text" 
         name="dream" 

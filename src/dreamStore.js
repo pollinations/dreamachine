@@ -46,10 +46,10 @@ const loadDream = memoize(dreamPrompt => {
     console.log("running model for dream", prompt1, prompt2);
     (async () => {
       const id = await createImage({
-        prompt1, 
+        prompt1,
         prompt2,
-        num_inference_steps: 10,
-        interpolation_frames: 16,
+        num_inference_steps: 25,
+        interpolation_frames: 18,
         scheduler: "KarrasDPM",
         seed:512,
         negative_prompt:"",
