@@ -126,19 +126,21 @@ const filterDreams = ({loading, videoURL}) => loading === false && videoURL
 
 const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. ${prompt}. Surrealism. Klarwein, Dali, Magritte`;
 const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
-const risographPromptPimper3 = prompt => `${prompt}. Risograph. Risograph.`;
+const risographPromptPimper3 = prompt => `${prompt}. Risograph. Minimalism.`;
 const retroFuturisticPromptPimper4 = prompt => `${prompt}. Retro futurist poster. detail render, realistic maya, octane render, rtx, photo `;
 const vintagePhotoPimper = prompt => `Vintage polaroid photo of ${prompt}. highly detailed shot, eerie 8 k uhd. dreamy`;
 const solarPunkPromptPimper = prompt => `A solarpunk ${prompt}, high resolution, neon lights, light and shadow`;
-
+const graffitiPromptPimper = prompt => `Dream of ${prompt}. graffiti art, inspired by Brad Kunkle, tutu, russ mills, hip skirt wings, andrey gordeev`
 
 // const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
 
 // execute one of the previously defined promptPimpers depending on the minute of the hour
 const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
-  if (minute < 20) return surrealistPromptPimper1(prompt);
-  if (minute < 40) return surrealistPromptPimper2(prompt);
-  if (minute < 60) return risographPromptPimper3(prompt);
-  return solarPunkPromptPimper(prompt);
+  if (minute < 10) return surrealistPromptPimper1(prompt);
+  if (minute < 20) return surrealistPromptPimper2(prompt);
+  if (minute < 30) return risographPromptPimper3(prompt);
+  if (minute < 40) return retroFuturisticPromptPimper4(prompt);
+  if (minute < 50) return vintagePhotoPimper(prompt);
+  return graffitiPromptPimper(prompt);
 }
