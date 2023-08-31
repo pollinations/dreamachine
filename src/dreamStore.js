@@ -5,11 +5,13 @@ import memoize from "lodash.memoize";
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
 import promiseQueue from "./promiseQueue";
+import { createImage, getPrediction } from "./replicate";
 
 const dreamStore = Store("dreamachine");
 
-
-export const dreamMachineName = localStorage.getItem("dream") || "dreamachine";
+// get dream machine name from query string
+const queryDreamMachineName = new URLSearchParams(window.location.search).get("dream");
+export const dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "dreamachine_xl_6";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -38,21 +40,27 @@ const loadDream = memoize(dreamPrompt => {
   }
 
   promiseQueue(() => {
-    console.log("running model for dream", dreamPrompt);
-    runModel({ 
-      prompts: dreamPrompt,
-      num_frames_per_prompt: -30,
-      random_seed: 50,
-      width: 768,
-      prompt_scale: 15
-      // prompt_scale: 12,
-    }, "614871946825.dkr.ecr.us-east-1.amazonaws.com/pollinations/stable-diffusion-private", false, {priority: 6})
-    .then(data => {
-      const videoURL = data?.output && data?.output["out_0.mp4"]
+    // console.log("running model for dream", dreamPrompt);
+    let [prompt1, prompt2] = dreamPrompt.split("\n").slice(0,2);
+    if (!prompt2) prompt2 = prompt1;
+    console.log("running model for dream", prompt1, prompt2);
+    (async () => {
+      const id = await createImage({
+        prompt1, 
+        prompt2,
+        num_inference_steps: 10,
+        interpolation_frames: 16,
+        scheduler: "KarrasDPM",
+        seed:512,
+        negative_prompt:"",
+      });
+      console.log("received prediction id", id);
+      const data = await getPrediction(id);
+      const videoURL = data?.output && data.output[data.output.length - 1];
       console.log("loaded dream", dreamPrompt, videoURL)
       result.videoURL = videoURL;
       result.loading = false;
-    })
+    })();
     return awaitSleep(15000);
   })
   
@@ -77,7 +85,7 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
   const previousDream = dreams[i-1]?.dream
   const compositePrompt = 
               (previousDream ? [previousDream, dream.dream] : [dream.dream])
-              .map(solarPunkPromptPimper)
+              .map(timeBasedPromptPimper)
               .join("\n")
               
   const dreamWithResults =  {...dream, ...loadDream(compositePrompt) }

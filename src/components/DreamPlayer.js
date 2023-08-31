@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useDreams } from "../dreamStore";
 
 // get playback rate from local storage
-const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 1.5)
+const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 0.5)
 
 export default function DreamsPlayer() {
 
@@ -63,15 +63,16 @@ export default function DreamsPlayer() {
     if (!dream)
         return <h1>loading first dream...</h1>
 
-    return <Container>
-        <div style={{width:"100%", height:"100%", position:"relative"}}>   
+    return <Container style={{position:"initial"}}>
+        <div style={{width:"100%", height:"100%"}}>
         <DreamBanner />
             <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglePlayer} />
             <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglePlayer} />
-        </div>
-        <Legenda>
+            <Legenda>
              {text}
-        </Legenda>
+            </Legenda>
+        </div>
+
     </Container>
 }
 
@@ -114,9 +115,10 @@ const Legenda = styled.p`
     background: rgba(0, 0, 0, 0.35);
     font-weight: 400;
     font-size: 3vw;
-    bottom: 00px;
+    bottom: 0px;
     margin: 0 auto;
     width: 100%;
+    // height:100px;
 `;
 
 const URL = styled.p`
