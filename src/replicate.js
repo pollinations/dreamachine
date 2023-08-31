@@ -9,7 +9,7 @@
 //   fetch: window.fetch
 // });
 // 
-const REPLICATE_API_URL = 'https://v16.soundmosaic.pixelynx-ai.com/replicate';
+const REPLICATE_API_URL = 'https://dev.soundmosaic.pixelynx-ai.com/replicate';
 // const REPLICATE_API_URL = 'http://localhost:8080/replicate';
 const SOUNDMOSAIC_TOKEN = "273b1dda33244edf921264fe374994fe"
 

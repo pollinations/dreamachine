@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useDreams } from "../dreamStore";
 
 // get playback rate from local storage
-const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 0.5)
+const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 0.25)
 
 export default function DreamsPlayer() {
 

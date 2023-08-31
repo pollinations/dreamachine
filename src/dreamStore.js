@@ -1,4 +1,3 @@
-import runModel, { getPollens } from "@pollinations/ipfs/awsPollenRunner";
 import Store from "@pollinations/ipfs/pollenStore";
 import awaitSleep from "await-sleep";
 import memoize from "lodash.memoize";
@@ -11,7 +10,7 @@ const dreamStore = Store("dreamachine");
 
 // get dream machine name from query string
 const queryDreamMachineName = new URLSearchParams(window.location.search).get("dream");
-export const dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "dreamachine_xl_6";
+export const dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "aliveinteraction";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
@@ -25,47 +24,7 @@ const initDreamStore =  async () => {
 export const getDreams = async () => await dreamStore.get(dreamMachineName);
 export const setDreams = async (dreams) => await dreamStore.set(dreamMachineName, dreams);
 
-export const getDreamResults = async (dreamID) => {
-    const pollens = await getPollens({input: dreamID});
-    return pollens[0]?.output;
-}
-
 initDreamStore();
-
-const loadDream = memoize(dreamPrompt => {
-  console.log("loading dream", dreamPrompt);
-  const result = {
-    loading: true,
-    videoURL: null
-  }
-
-  promiseQueue(() => {
-    // console.log("running model for dream", dreamPrompt);
-    let [prompt1, prompt2] = dreamPrompt.split("\n").slice(0,2);
-    if (!prompt2) prompt2 = prompt1;
-    console.log("running model for dream", prompt1, prompt2);
-    (async () => {
-      const id = await createImage({
-        prompt1,
-        prompt2,
-        num_inference_steps: 25,
-        interpolation_frames: 18,
-        scheduler: "KarrasDPM",
-        seed:512,
-        negative_prompt:"",
-      });
-      console.log("received prediction id", id);
-      const data = await getPrediction(id);
-      const videoURL = data?.output && data.output[data.output.length - 1];
-      console.log("loaded dream", dreamPrompt, videoURL)
-      result.videoURL = videoURL;
-      result.loading = false;
-    })();
-    return awaitSleep(15000);
-  })
-  
-  return result
-})
 
 export async function loadDreams() {
     const dreams = (await getDreams())//.slice(0,5)
@@ -92,6 +51,43 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
 
   return dreamWithResults
 }
+
+
+const loadDream = memoize(dreamPrompt => {
+  console.log("loading dream", dreamPrompt);
+  const result = {
+    loading: true,
+    videoURL: null
+  }
+
+  promiseQueue(() => {
+    // console.log("running model for dream", dreamPrompt);
+    let [prompt1, prompt2] = dreamPrompt.split("\n").slice(0,2);
+    if (!prompt2) prompt2 = prompt1;
+    console.log("running model for dream", prompt1, prompt2);
+    (async () => {
+      const id = await createImage({
+        prompt1,
+        prompt2,
+        num_inference_steps: 25,
+        interpolate_frames: 18,
+        scheduler: "KarrasDPM",
+        seed:512,
+        negative_prompt:"",
+      });
+      console.log("received prediction id", id);
+      const data = await getPrediction(id);
+      const videoURL = data?.output && data.output[data.output.length - 1];
+      console.log("loaded dream", dreamPrompt, videoURL)
+      result.videoURL = videoURL;
+      result.loading = false;
+    })();
+    return awaitSleep(15000);
+  })
+  
+  return result
+})
+
 
 // poll dream store every 5 seconds and return the current state of dreams
 export function useDreams(dreamFilter = filterDreams, triggerCreate=true) {
@@ -126,20 +122,21 @@ const filterDreams = ({loading, videoURL}) => loading === false && videoURL
 
 
 const surrealistPromptPimper1 = prompt => `Dream of ${prompt}. ${prompt}. Surrealism. Klarwein, Dali, Magritte`;
-const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. ${prompt}. Beautiful surrealistic surrealistic. illustration. painting. Hand drawn. Black and white.`;
+const surrealistPromptPimper2 = prompt => `Dream of ${prompt}. ${prompt}. surrealistic. illustration. painting. Hand drawn. Black and white.`;
 const risographPromptPimper3 = prompt => `${prompt}. Risograph. Minimalism.`;
-const retroFuturisticPromptPimper4 = prompt => `${prompt}. Retro futurist poster. detail render, realistic maya, octane render, rtx, photo `;
-const vintagePhotoPimper = prompt => `Vintage polaroid photo of ${prompt}. highly detailed shot, eerie 8 k uhd. dreamy`;
+const retroFuturisticPromptPimper4 = prompt => `Retro-futurist ${prompt}. Poster. vintage sci-fi, 50s and 60s style, atomic age, vibrant,`;
+const vintagePhotoPimper = prompt => `analog film photo ${prompt} . faded film, desaturated, 35mm photo, grainy, vignette, vintage, Kodachrome, Lomography, stained, highly detailed, found footage`;
 const solarPunkPromptPimper = prompt => `A solarpunk ${prompt}, high resolution, neon lights, light and shadow`;
 const graffitiPromptPimper = prompt => `Dream of ${prompt}. graffiti art, inspired by Brad Kunkle, tutu, russ mills, hip skirt wings, andrey gordeev`
-
+const paperQuilling = prompt => `paper quilling art of ${prompt} . intricate, delicate, curling, rolling, shaping, coiling, loops, 3D, dimensional, ornamental`;
+const paperCut = prompt => `papercut collage of ${prompt} . mixed media, textured paper, overlapping, asymmetrical, abstract, vibrant`
 // const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
 
 // execute one of the previously defined promptPimpers depending on the minute of the hour
 const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
   if (minute < 10) return surrealistPromptPimper1(prompt);
-  if (minute < 20) return surrealistPromptPimper2(prompt);
+  if (minute < 20) return paperCut(prompt);
   if (minute < 30) return risographPromptPimper3(prompt);
   if (minute < 40) return retroFuturisticPromptPimper4(prompt);
   if (minute < 50) return vintagePhotoPimper(prompt);
