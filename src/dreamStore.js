@@ -94,19 +94,20 @@ const buildPromptAndLoadDream = (dream, i ,dreams)  => {
 }
 
 // poll dream store every 5 seconds and return the current state of dreams
-export function useDreams(dreamFilter=filterDreams) {
+export function useDreams(dreamFilter = filterDreams, triggerCreate=true) {
     const [dreams, sDreams] = useState([]);
 
+    const dreamFunction = triggerCreate ? loadDreams : getDreams;
 
-    console.log(dreams)
+    console.log("useDreams", dreams)
 
     useEffect(() => {
-      (async () => sDreams((await loadDreams()).filter(dreamFilter)))();
-    }, []);
+      (async () => sDreams((await dreamFunction()).filter(dreamFilter)))();
+    }, [dreamFunction]);
 
     useInterval(async () => {
       
-      const newDreams = await loadDreams();
+      const newDreams = await dreamFunction();
       console.log("loaded dreams", newDreams)
       const newDreamsFiltered = newDreams.filter(dreamFilter)
       // only update dreams if they are different

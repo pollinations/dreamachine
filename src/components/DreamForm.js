@@ -3,10 +3,11 @@ import { useState } from "react";
 import { useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import useInterval from "use-interval";
-import { getDreams, setDreams } from "../dreamStore";
+import { getDreams, setDreams, useDreams } from "../dreamStore";
 import useLocalStorage from "../useLocalStorage";
 
 
+const bgblacktrans = { backgroundColor: "rgba(0,0,0,0.4)" };
 export default function DreamForm() {
   const isMatch = !useMatch('/view')
 
@@ -24,6 +25,10 @@ export default function DreamForm() {
   
   const [dreamPrompt, setDreamPrompt] = useState("");
   const dispatchDream = useDreamDispatch(dreamPrompt, setDreamPrompt);
+  const dreams = useDreams(()=>true, false);
+  
+
+  const lastDream = dreams && dreams[dreams.length -1]?.dream;
 
   return (
     <Form onSubmit={(event) => {
@@ -44,6 +49,8 @@ export default function DreamForm() {
         <li>What you are dreaming of for the future? </li>
         <li>A dreamy psychedelic experience? </li>
       </ul>
+
+      <p>Previous: <b style={bgblacktrans}>{lastDream}</b></p>
       <p>Type here:</p>
       <Input 
         type="text" 
