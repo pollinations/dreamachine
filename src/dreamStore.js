@@ -135,7 +135,7 @@ const vintagePhotoPimper = prompt => `analog film photo ${prompt} . faded film, 
 const solarPunkPromptPimper = prompt => `A solarpunk ${prompt}, high resolution, neon lights, light and shadow`;
 const graffitiPromptPimper = prompt => `Dream of ${prompt}. graffiti art, inspired by Brad Kunkle, tutu, russ mills, andrey gordeev`
 const paperQuilling = prompt => `paper quilling art of ${prompt} . intricate, delicate, curling, rolling, shaping, coiling, loops, 3D, dimensional, ornamental`;
-const paperCut = prompt => `papercut collage of ${prompt} . mixed media, textured paper, overlapping, asymmetrical, abstract, vibrant`
+const paperCut = prompt => `papercut collage of ${prompt} . mixed media, textured paper, overlapping, asymmetrical, abstract, vibrant, dimensional`
 // const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
 
 // execute one of the previously defined promptPimpers depending on the minute of the hour
@@ -143,7 +143,7 @@ const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
   if (minute < 10) return surrealistPromptPimper1(prompt);
   if (minute < 20) return paperCut(prompt);
-  if (minute < 30) return risographPromptPimper3(prompt);
+  if (minute < 30) return surrealistPromptPimper2(prompt);
   if (minute < 40) return retroFuturisticPromptPimper4(prompt);
   if (minute < 50) return vintagePhotoPimper(prompt);
   return graffitiPromptPimper(prompt);
