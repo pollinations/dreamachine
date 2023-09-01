@@ -38,7 +38,7 @@ export default function DreamForm() {
         dispatchDream(event);
       }} isVisible={isMatch} >
         <a href='https://pollinations.ai'>
-        <img style={{width: 200, margin:'2em 0'}}
+        <img style={{width: 100, margin:'2em 0'}}
         src='https://i.imgur.com/TtlWIYp.png' alt="pollinations"/>
       </a>
       <h1>A-Live º INTERACTION</h1>
@@ -64,11 +64,11 @@ export default function DreamForm() {
       <CreateButton type="submit" disabled={disabled}>
         Submit
       </CreateButton>
-      <BackGroundImage 
+      {/* <BackGroundImage 
           src='https://i.imgur.com/ylF6m8L.png'
           top='auto'
           zIndex='-1' 
-          alt="hero_bg_overlay" />
+          alt="hero_bg_overlay" /> */}
     </Form>
   );
 }
