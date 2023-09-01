@@ -14,27 +14,21 @@ const state = {
 
 // export getter and setter
 export const getDreamMachineName = () => state.dreamMachineName;
-export const setDreamMachineName = (dreamMachineName) => {
-  state.dreamMachineName = dreamMachineName;
-};
+export const setDreamMachineName = (dreamMachineName) => state.dreamMachineName = dreamMachineName;;
 
 // get dream machine name from query string
 const queryDreamMachineName = new URLSearchParams(window.location.search).get("dream");
 state.dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "aliveinteraction_1";
 
-const initDreamStore =  async () => {
-    console.log("initializing dream store if it does not exist yet"); 
-    if (!await dreamStore.get(state.dreamMachineName)) {
-      console.log("dream store does not exist yet, creating it");
-      await dreamStore.set(state.dreamMachineName, []);
-    }
-  }
+export const getDreams = async () =>{
+  const dreams = await dreamStore.get(getDreamMachineName());
+  if (!dreams) return [];
+  return dreams;
+}
 
+export const setDreams = async (dreams) => await dreamStore.set(getDreamMachineName(), dreams);
 
-export const getDreams = async () => await dreamStore.get(state.dreamMachineName);
-export const setDreams = async (dreams) => await dreamStore.set(state.dreamMachineName, dreams);
-
-initDreamStore();
+// initDreamStore();
 
 export async function loadDreams() {
     const dreams = (await getDreams())//.slice(0,5)
@@ -110,7 +104,7 @@ export function useDreams(dreamFilter = filterDreams, triggerCreate=true) {
     console.log("useDreams", dreams)
 
     useEffect(() => {
-      (async () => sDreams((await dreamFunction()).filter(dreamFilter)))();
+      setTimeout(async () => sDreams((await dreamFunction()).filter(dreamFilter)), 100);
     }, [dreamFunction]);
 
     useInterval(async () => {
