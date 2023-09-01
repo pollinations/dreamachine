@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useDreams } from "../dreamStore";
+import { getDreamMachineName, useDreams } from "../dreamStore";
 
 // get playback rate from local storage
 const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 0.4)
@@ -104,7 +104,7 @@ function DreamBanner() {
             setVisible(true)
         } ,15000)
     },[])
-    return <URL style={{display: visible ? "":"none"}}>Participate -> <b>https://dreamachine.pollinations.ai</b></URL>
+    return <URL style={{display: visible ? "":"none"}}>Participate -> <b>{`https://dreamachine.art/${getDreamMachineName()}`}</b></URL>
 }
 
 // brutalist css styling
