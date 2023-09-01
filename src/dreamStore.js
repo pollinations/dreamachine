@@ -146,5 +146,5 @@ const timeBasedPromptPimper = prompt => {
   if (minute < 30) return surrealistPromptPimper2(prompt);
   if (minute < 40) return retroFuturisticPromptPimper4(prompt);
   if (minute < 50) return vintagePhotoPimper(prompt);
-  return graffitiPromptPimper(prompt);
+  return surrealistPromptPimper1(prompt);
 }
