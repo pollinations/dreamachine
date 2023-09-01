@@ -74,6 +74,8 @@ const loadDream = memoize(dreamPrompt => {
         scheduler: "KarrasDPM",
         seed:512,
         negative_prompt:"",
+        width: 1280,
+        height: 720,
       });
       console.log("received prediction id", id);
       const data = await getPrediction(id);
