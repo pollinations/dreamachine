@@ -42,13 +42,8 @@ export default function DreamForm() {
         src='https://i.imgur.com/TtlWIYp.png' alt="pollinations"/>
       </a>
       <h1>A-Live º INTERACTION</h1>
-      <p>Pollinations will turn your idea into pictures using a chain of AI models. It should appear in the collective video in a few minutes...</p>
-      You can submit any kind of dream. For example:
-      <ul>
-        <li>What you dreamed last night?</li>
-        <li>What you are dreaming of for the future? </li>
-        <li>A dreamy psychedelic experience? </li>
-      </ul>
+      <p>An animation is worth more than a million words. It should appear in the collective video in a few minutes...</p>
+      Send something related to your feeling in this moment i.e. your internal state or your surroundings. Let's write a story together.
 
       <p>Previous: <b style={bgblacktrans}>{lastDream}</b></p>
       <p>Type here:</p>
