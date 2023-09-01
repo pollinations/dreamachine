@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useDreams } from "../dreamStore";
 
 // get playback rate from local storage
-const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 0.25)
+const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 0.4)
 
 export default function DreamsPlayer() {
 
@@ -104,7 +104,7 @@ function DreamBanner() {
             setVisible(true)
         } ,15000)
     },[])
-    return <URL style={{display: visible ? "":"none"}}>Send your dream: <b>https://dreamachine.pollinations.ai</b></URL>
+    return <URL style={{display: visible ? "":"none"}}>Participate -> <b>https://dreamachine.pollinations.ai</b></URL>
 }
 
 // brutalist css styling
@@ -112,7 +112,7 @@ function DreamBanner() {
 const Legenda = styled.p`
     text-align: center;
     position: absolute;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.6);
     font-weight: 400;
     font-size: 3vw;
     bottom: 0px;
