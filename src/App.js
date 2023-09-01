@@ -45,7 +45,7 @@ const Dream = () => {
 const RedirectToAlive = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate('/alive');
+    navigate('/a_live');
   }, [navigate]);
   return null;
 };
