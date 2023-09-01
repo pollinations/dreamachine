@@ -146,24 +146,29 @@ video {
 }
 `
 
-
-
-
-
-// return dream and possibility to jump to the next dream
-
 export function useDreamsWithIndex(lastN=4) {
+  const allDreams = useDreams();
+  const dreams = allDreams.slice(-1 * lastN);
 
-    const allDreams = useDreams();
-    const dreams = allDreams.slice(-1 * lastN);
-    const [index, setIndex] = useState(0);
-  
-    const nextDream = () => dreams.length > 0 && setIndex((index + 1) % dreams.length);
-  
-    console.log("dreamIndex", index, "dreams", dreams);
-    
-    return {dreams, index, nextDream};
-  }
+  const [index, setIndex] = useState(null);
+
+  useEffect(() => {
+    if (dreams.length > 0 && index === null) {
+      // Set index to a random value only the first time dreams are populated
+      setIndex(Math.floor(Math.random() * dreams.length));
+    }
+  }, [dreams, index]);
+
+  const nextDream = () => {
+    if (dreams.length > 0 && index !== null) {
+      setIndex((index + 1) % dreams.length);
+    }
+  };
+
+  console.log("dreamIndex", index, "dreams", dreams);
+
+  return { dreams, index, nextDream };
+}
 
 const speak = (text) =>{ 
         const utterance = new window.SpeechSynthesisUtterance(text)
