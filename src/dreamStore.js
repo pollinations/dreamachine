@@ -10,7 +10,7 @@ const dreamStore = Store("dreamachine");
 
 // get dream machine name from query string
 const queryDreamMachineName = new URLSearchParams(window.location.search).get("dream");
-export const dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "aliveinteraction";
+export const dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "aliveinteraction_1";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
