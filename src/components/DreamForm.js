@@ -166,6 +166,7 @@ function useDreamDispatch(dreamText, setDreamPrompt){
     console.log("got previous dreams", dreamsUntilNow);
     const newDreams = append({ 
       dream: dreamText,
+      started: false,
     }, dreamsUntilNow)
 //       
     console.log("dreamsWithNewOne", newDreams, "updating db")

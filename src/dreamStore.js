@@ -33,66 +33,96 @@ export const setDreams = async (dreams) => await dreamStore.set(getDreamMachineN
 export async function loadDreams() {
     const dreams = (await getDreams())//.slice(0,5)
     console.log("got dreams", dreams)
-    const newDreams = dreams.map(buildPromptAndLoadDream)
-    await setDreams(newDreams)
+
+    // filter all dreams that have started===false
+    // const dreamsToStart = dreams.filter(dream => dream.started === false);
+    const dreamsWithPrompts = dreams.map(buildPrompt);
+
+
+    const newDreams = dreamsWithPrompts.map((dream, i) => {
+      if (dream.started === false) {
+        console.log("starting dream", dream);
+        // start logic will be added here 
+        const startedDream = {...dream, started: true};
+
+        loadDreamAndUpdateDreams(startedDream, i)
+        return startedDream;
+      }
+      return dream;
+    });
+
+    await setDreams(newDreams);
+
     return newDreams;
+
+
+    // for (let i = 0; i < dreamsWithPrompts.length; i++) {
+    //   const dream = dreamsWithPrompts[i];
+    //   if (dream.started === false) {
+
+    //     console.log("starting dream", dream);
+    //     setDreams(dreamsWithPrompts.map((dream, j) => i === j ? {...dream, started: true} : dream))
+    //     dreamsWithPrompts[i] = await loadDream(dream.prompt)
+    //     await setDreams(dreamsWithPrompts)
+    //   }
+    // }
+
+    
+    // await setDreams(newDreams)
+    // return newDreams;
             // .filter(dream => !dream.loading)
             //.map(({result, ...dream}) => ({...dream, ...result}))
 }
 
-const buildPromptAndLoadDream = (dream, i ,dreams)  => {
-  
-  if (dream.loading === false)
-    return dream;
-    
+async function loadDreamAndUpdateDreams(dream, i) {
+  const dreamWithResults = await loadDream(dream);
+  const newDreams = await getDreams();
+  newDreams[i] = dreamWithResults;
+  console.log("updated dreams at index ",i, "with", dreamWithResults)
+  await setDreams(newDreams)
+  return dreamWithResults;
+}
+
+const buildPrompt = (dream, i ,dreams)  => {
+  // if (dream.started === false)
+  //   return dream;
   const previousDream = dreams[i-1]?.dream
   const compositePrompt = 
               (previousDream ? [previousDream, dream.dream] : [dream.dream])
               .map(timeBasedPromptPimper)
               .join("\n")
               
-  const dreamWithResults =  {...dream, ...loadDream(compositePrompt) }
+  const dreamWithResults =  {...dream, prompt: compositePrompt }
 
   return dreamWithResults
 }
 
 
-const loadDream = memoize(dreamPrompt => {
-  console.log("loading dream", dreamPrompt);
-  const result = {
-    loading: true,
-    videoURL: null
-  }
+const loadDream = async dream => {
+  console.log("executing / loading dream", dream);
+  // const result = dream;
 
-  promiseQueue(() => {
-    // console.log("running model for dream", dreamPrompt);
-    let [prompt1, prompt2] = dreamPrompt.split("\n").slice(0,2);
-    if (!prompt2) prompt2 = prompt1;
-    console.log("running model for dream", prompt1, prompt2);
-    (async () => {
-      const id = await createImage({
-        prompt1,
-        prompt2,
-        num_inference_steps: 25,
-        interpolate_frames: 18,
-        scheduler: "KarrasDPM",
-        seed:512,
-        negative_prompt:"",
-        width: 1280,
-        height: 720,
-      });
-      console.log("received prediction id", id);
-      const data = await getPrediction(id);
-      const videoURL = data?.output && data.output[data.output.length - 1];
-      console.log("loaded dream", dreamPrompt, videoURL)
-      result.videoURL = videoURL;
-      result.loading = false;
-    })();
-    return awaitSleep(15000);
-  })
+  let [prompt1, prompt2] = dream.prompt.split("\n").slice(0,2);
+  if (!prompt2) prompt2 = prompt1;
+  console.log("running model for dream", prompt1, prompt2);
+  const id = await createImage({
+    prompt1,
+    prompt2,
+    num_inference_steps: 25,
+    interpolate_frames: 18,
+    scheduler: "KarrasDPM",
+    seed:512,
+    negative_prompt:"",
+    width: 1280,
+    height: 720,
+  });
+  console.log("received prediction id", id);
+  const data = await getPrediction(id);
+  const videoURL = data?.output && data.output[data.output.length - 1];
+  console.log("loaded dream", dream.prompt, videoURL)
   
-  return result
-})
+  return {...dream, videoURL, loading: false, started: true};
+};
 
 
 // poll dream store every 5 seconds and return the current state of dreams
@@ -141,7 +171,7 @@ const paperCut = prompt => `papercut collage of ${prompt} . mixed media, texture
 // execute one of the previously defined promptPimpers depending on the minute of the hour
 const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
-  if (minute < 10) return surrealistPromptPimper1(prompt);
+  if (minute < 30) return surrealistPromptPimper1(prompt);
   if (minute < 20) return paperCut(prompt);
   if (minute < 30) return surrealistPromptPimper2(prompt);
   if (minute < 40) return retroFuturisticPromptPimper4(prompt);
