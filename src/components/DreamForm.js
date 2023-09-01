@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import useInterval from "use-interval";
-import { getDreams, setDreams, useDreams } from "../dreamStore";
+import { getDreamMachineName, getDreams, setDreams, useDreams } from "../dreamStore";
 import useLocalStorage from "../useLocalStorage";
 
 
@@ -44,8 +44,8 @@ export default function DreamForm() {
       <h1>A-Live º INTERACTION</h1>
       <p>An animation is worth more than a million words. It should appear in the collective video in a few minutes...</p>
       Send something related to your feeling in this moment i.e. your internal state or your surroundings. Let's write a story together.
-
-      <p>Previous: <b style={bgblacktrans}>{lastDream}</b></p>
+      <p>Session: <b style={bgblacktrans}><a href={`/${getDreamMachineName()}/view/`}>{getDreamMachineName()}</a></b></p>
+      <p>Last sentence: <b style={bgblacktrans}>{lastDream}</b></p>
       <p>Type here:</p>
       <Input 
         type="text" 

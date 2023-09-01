@@ -8,21 +8,31 @@ import { createImage, getPrediction } from "./replicate";
 
 const dreamStore = Store("dreamachine");
 
+const state = {
+  dreamMachineName: null,
+}
+
+// export getter and setter
+export const getDreamMachineName = () => state.dreamMachineName;
+export const setDreamMachineName = (dreamMachineName) => {
+  state.dreamMachineName = dreamMachineName;
+};
+
 // get dream machine name from query string
 const queryDreamMachineName = new URLSearchParams(window.location.search).get("dream");
-export const dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "aliveinteraction_1";
+state.dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "aliveinteraction_1";
 
 const initDreamStore =  async () => {
     console.log("initializing dream store if it does not exist yet"); 
-    if (!await dreamStore.get(dreamMachineName)) {
+    if (!await dreamStore.get(state.dreamMachineName)) {
       console.log("dream store does not exist yet, creating it");
-      await dreamStore.set(dreamMachineName, []);
+      await dreamStore.set(state.dreamMachineName, []);
     }
   }
 
 
-export const getDreams = async () => await dreamStore.get(dreamMachineName);
-export const setDreams = async (dreams) => await dreamStore.set(dreamMachineName, dreams);
+export const getDreams = async () => await dreamStore.get(state.dreamMachineName);
+export const setDreams = async (dreams) => await dreamStore.set(state.dreamMachineName, dreams);
 
 initDreamStore();
 
