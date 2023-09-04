@@ -1,10 +1,8 @@
 import Store from "@pollinations/ipfs/pollenStore";
-import awaitSleep from "await-sleep";
-import memoize from "lodash.memoize";
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
-import promiseQueue from "./promiseQueue";
 import { createImage, getPrediction } from "./replicate";
+import { timeBasedPromptPimper } from "./promptPimpers";
 
 const dreamStore = Store("dreamachine");
 
@@ -22,57 +20,34 @@ state.dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") 
 
 export const getDreams = async () =>{
   const dreams = await dreamStore.get(getDreamMachineName());
-  if (!dreams) return [];
-  return dreams;
+  return dreams || [];
 }
 
 export const setDreams = async (dreams) => await dreamStore.set(getDreamMachineName(), dreams);
 
-// initDreamStore();
+
 
 export async function loadDreams() {
     const dreams = (await getDreams())//.slice(0,5)
     console.log("got dreams", dreams)
 
-    // filter all dreams that have started===false
-    // const dreamsToStart = dreams.filter(dream => dream.started === false);
     const dreamsWithPrompts = dreams.map(buildPrompt);
-
-
-    const newDreams = dreamsWithPrompts.map((dream, i) => {
-      if (dream.started === false) {
-        console.log("starting dream", dream);
-        // start logic will be added here 
-        const startedDream = {...dream, started: true};
-
-        loadDreamAndUpdateDreams(startedDream, i)
-        return startedDream;
-      }
-      return dream;
-    });
-
+    const newDreams = dreamsWithPrompts.map(startPending);
     await setDreams(newDreams);
 
     return newDreams;
 
-
-    // for (let i = 0; i < dreamsWithPrompts.length; i++) {
-    //   const dream = dreamsWithPrompts[i];
-    //   if (dream.started === false) {
-
-    //     console.log("starting dream", dream);
-    //     setDreams(dreamsWithPrompts.map((dream, j) => i === j ? {...dream, started: true} : dream))
-    //     dreamsWithPrompts[i] = await loadDream(dream.prompt)
-    //     await setDreams(dreamsWithPrompts)
-    //   }
-    // }
-
-    
-    // await setDreams(newDreams)
-    // return newDreams;
-            // .filter(dream => !dream.loading)
-            //.map(({result, ...dream}) => ({...dream, ...result}))
 }
+
+const startPending = (dream, i) => {
+  if (dream.started === false) {
+    console.log("starting dream", dream);
+    const startedDream = { ...dream, started: true };
+    loadDreamAndUpdateDreams(startedDream, i);
+    return startedDream;
+  }
+  return dream;
+};
 
 async function loadDreamAndUpdateDreams(dream, i) {
   const dreamWithResults = await loadDream(dream);
@@ -84,8 +59,6 @@ async function loadDreamAndUpdateDreams(dream, i) {
 }
 
 const buildPrompt = (dream, i ,dreams)  => {
-  // if (dream.started === false)
-  //   return dream;
   const previousDream = dreams[i-1]?.dream
   const compositePrompt = 
               (previousDream ? [previousDream, dream.dream] : [dream.dream])
@@ -100,11 +73,11 @@ const buildPrompt = (dream, i ,dreams)  => {
 
 const loadDream = async dream => {
   console.log("executing / loading dream", dream);
-  // const result = dream;
 
   let [prompt1, prompt2] = dream.prompt.split("\n").slice(0,2);
   if (!prompt2) prompt2 = prompt1;
   console.log("running model for dream", prompt1, prompt2);
+
   const id = await createImage({
     prompt1,
     prompt2,
@@ -126,27 +99,28 @@ const loadDream = async dream => {
 
 
 // poll dream store every 5 seconds and return the current state of dreams
-export function useDreams(dreamFilter = filterDreams, triggerCreate=true) {
-    const [dreams, sDreams] = useState([]);
-
-    const dreamFunction = triggerCreate ? loadDreams : getDreams;
+export function useDreams(dreamFilter = filterDreams) {
+    const [dreams, setDreamsState] = useState([]);
 
     console.log("useDreams", dreams)
 
+
+  const refreshDreams = async () => {
+    const newDreams = await loadDreams();
+    console.log("loaded dreams", newDreams);
+    const newDreamsFiltered = newDreams.filter(dreamFilter);
+    // only update dreams if they are different
+    if (JSON.stringify(newDreamsFiltered) !== JSON.stringify(dreams))
+      setDreamsState(newDreamsFiltered);
+    };
+
     useEffect(() => {
-      setTimeout(async () => sDreams((await dreamFunction()).filter(dreamFilter)), 100);
-    }, [dreamFunction]);
+      setTimeout(() => {
+        refreshDreams();
+      }, 100);
+    }, []);
 
-    useInterval(async () => {
-      
-      const newDreams = await dreamFunction();
-      console.log("loaded dreams", newDreams)
-      const newDreamsFiltered = newDreams.filter(dreamFilter)
-      // only update dreams if they are different
-      if (JSON.stringify(newDreamsFiltered) !== JSON.stringify(dreams)) 
-        sDreams( newDreamsFiltered );
-
-    }, 10000);
+    useInterval(refreshDreams, 10000);
     
     return dreams;
   
@@ -157,24 +131,4 @@ const filterDreams = ({loading, videoURL}) => loading === false && videoURL
 
 
 
-const surrealistPromptPimper1 = prompt => `${prompt}. Surrealism. Klarwein, Dali, Magritte`;
-const surrealistPromptPimper2 = prompt => `${prompt}. surrealistic. illustration. painting. Hand drawn. Black and white.`;
-const risographPromptPimper3 = prompt => `${prompt}. Risograph. Minimalism.`;
-const retroFuturisticPromptPimper4 = prompt => `Retro-futurist ${prompt}. Poster. vintage sci-fi, 50s and 60s style, atomic age, vibrant,`;
-const vintagePhotoPimper = prompt => `analog film photo ${prompt} . faded film, desaturated, 35mm photo, grainy, vignette, vintage, Kodachrome, Lomography, stained, highly detailed, found footage`;
-const solarPunkPromptPimper = prompt => `A solarpunk ${prompt}, high resolution, neon lights, light and shadow`;
-const graffitiPromptPimper = prompt => `${prompt}. graffiti art, inspired by, andrey gordeev`
-const paperQuilling = prompt => `paper quilling art of ${prompt} . intricate, delicate, curling, rolling, shaping, coiling, loops, 3D, dimensional, ornamental`;
-const paperCut = prompt => `papercut collage of ${prompt} . mixed media, textured paper, overlapping, asymmetrical, abstract, vibrant, dimensional`
-// const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
 
-// execute one of the previously defined promptPimpers depending on the minute of the hour
-const timeBasedPromptPimper = prompt => {
-  const minute = new Date().getMinutes();
-  if (minute < 30) return surrealistPromptPimper1(prompt);
-  if (minute < 20) return paperCut(prompt);
-  if (minute < 30) return surrealistPromptPimper2(prompt);
-  if (minute < 40) return retroFuturisticPromptPimper4(prompt);
-  if (minute < 50) return vintagePhotoPimper(prompt);
-  return surrealistPromptPimper1(prompt);
-}

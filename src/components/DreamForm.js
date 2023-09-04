@@ -25,7 +25,7 @@ export default function DreamForm() {
   
   const [dreamPrompt, setDreamPrompt] = useState("");
   const dispatchDream = useDreamDispatch(dreamPrompt, setDreamPrompt);
-  const dreams = useDreams(()=>true, false);
+  const dreams = useDreams(()=>true);
   
 
   const lastDream = dreams && dreams[dreams.length -1]?.dream;
