@@ -8,6 +8,7 @@ import useLocalStorage from "../useLocalStorage";
 
 
 const bgblacktrans = { backgroundColor: "rgba(0,0,0,0.4)" };
+
 export default function DreamForm() {
   const isMatch = !useMatch('/view')
 
@@ -59,26 +60,10 @@ export default function DreamForm() {
       <CreateButton type="submit" disabled={disabled}>
         Submit
       </CreateButton>
-      {/* <BackGroundImage 
-          src='https://i.imgur.com/ylF6m8L.png'
-          top='auto'
-          zIndex='-1' 
-          alt="hero_bg_overlay" /> */}
     </Form>
   );
 }
-const BackGroundImage = styled.img`
-position: ${props => props.position ? props.position : 'fixed'};
-width: 100%;
-height: 100%;
-top: ${props => props.top || 0};
-left: 0;
-opacity: ${props => props.opacity || 1};
-z-index: ${props => props.zIndex || 0};
-mix-blend-mode: ${props => props.blend || 'normal'};
-transform: ${props => props.transform || ''};
-object-fit: initial;
-`
+
 const CreateButton = styled.button`
 
 width: 129px;
