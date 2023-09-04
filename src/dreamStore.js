@@ -1,62 +1,52 @@
 import Store from "@pollinations/ipfs/pollenStore";
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
-import { createImage, getPrediction } from "./replicate";
+import { createImage, getPrediction, pollPrediction } from "./replicate";
 import { timeBasedPromptPimper } from "./promptPimpers";
+import { useParams } from "react-router-dom";
 
 const dreamStore = Store("dreamachine");
 
-const state = {
-  dreamMachineName: null,
+
+// Function to get initial dream machine name
+function getInitialdreamsName() {
+  return new URLSearchParams(window.location.search).get("dream") || "aliveinteraction_1";
 }
 
-// export getter and setter
-export const getDreamMachineName = () => state.dreamMachineName;
-export const setDreamMachineName = (dreamMachineName) => state.dreamMachineName = dreamMachineName;;
 
-// get dream machine name from query string
-const queryDreamMachineName = new URLSearchParams(window.location.search).get("dream");
-state.dreamMachineName = queryDreamMachineName || localStorage.getItem("dream") || "aliveinteraction_1";
-
-export const getDreams = async () =>{
-  const dreams = await dreamStore.get(getDreamMachineName());
-  return dreams || [];
-}
-
-export const setDreams = async (dreams) => await dreamStore.set(getDreamMachineName(), dreams);
-
-
-
-export async function loadDreams() {
-    const dreams = (await getDreams())//.slice(0,5)
-    console.log("got dreams", dreams)
+async function loadDreams(dreamsName) {
+    const dreams = (await dreamStore.get(dreamsName)) || [];
+    console.log("got dreams", dreamsName, dreams)
 
     const dreamsWithPrompts = dreams.map(buildPrompt);
-    const newDreams = dreamsWithPrompts.map(startPending);
-    await setDreams(newDreams);
+    const newDreams = await Promise.all(dreamsWithPrompts.map(processPending));
 
     return newDreams;
 
 }
 
-const startPending = (dream, i) => {
+const processPending = async (dream) => {
   if (dream.started === false) {
     console.log("starting dream", dream);
-    const startedDream = { ...dream, started: true };
-    loadDreamAndUpdateDreams(startedDream, i);
-    return startedDream;
+    return await generateDream(dream);
+  }
+  if (dream.loading === true) {
+    console.log("polling dream", dream);
+    // getPrediction
+    const data = await getPrediction(dream.predictionID);
+    if (data.status === 'succeeded' || data.status === 'failed') {
+      const videoURL = data?.output && data.output[data.output.length - 1];
+      return {
+        ...dream, 
+        loading: false, 
+        videoURL, 
+        status: data.status
+      };
+    }
   }
   return dream;
 };
 
-async function loadDreamAndUpdateDreams(dream, i) {
-  const dreamWithResults = await loadDream(dream);
-  const newDreams = await getDreams();
-  newDreams[i] = dreamWithResults;
-  console.log("updated dreams at index ",i, "with", dreamWithResults)
-  await setDreams(newDreams)
-  return dreamWithResults;
-}
 
 const buildPrompt = (dream, i ,dreams)  => {
   const previousDream = dreams[i-1]?.dream
@@ -71,7 +61,7 @@ const buildPrompt = (dream, i ,dreams)  => {
 }
 
 
-const loadDream = async dream => {
+const generateDream = async dream => {
   console.log("executing / loading dream", dream);
 
   let [prompt1, prompt2] = dream.prompt.split("\n").slice(0,2);
@@ -89,29 +79,38 @@ const loadDream = async dream => {
     width: 1280,
     height: 720,
   });
-  console.log("received prediction id", id);
-  const data = await getPrediction(id);
-  const videoURL = data?.output && data.output[data.output.length - 1];
-  console.log("loaded dream", dream.prompt, videoURL)
   
-  return {...dream, videoURL, loading: false, started: true};
+  return {...dream, predictionID: id, loading: true, started: true};
 };
 
 
 // poll dream store every 5 seconds and return the current state of dreams
 export function useDreams(dreamFilter = filterDreams) {
+    const { dreamId } = useParams();
+    console.log("dreamId", dreamId)
+    const dreamsName = dreamId || getInitialdreamsName();
+
     const [dreams, setDreamsState] = useState([]);
 
     console.log("useDreams", dreams)
 
 
-  const refreshDreams = async () => {
-    const newDreams = await loadDreams();
-    console.log("loaded dreams", newDreams);
-    const newDreamsFiltered = newDreams.filter(dreamFilter);
-    // only update dreams if they are different
-    if (JSON.stringify(newDreamsFiltered) !== JSON.stringify(dreams))
-      setDreamsState(newDreamsFiltered);
+    const refreshDreams = async () => {
+      const newDreams = await loadDreams(dreamsName);
+      console.log("loaded dreams", newDreams);
+      const newDreamsFiltered = newDreams.filter(dreamFilter);
+      // only update dreams if they are different
+      if (JSON.stringify(newDreamsFiltered) !== JSON.stringify(dreams)) {
+        setDreamsState(newDreamsFiltered);
+        dreamStore.set(dreamsName, newDreams);
+      }
+    };
+
+    const addDream = async dream => {
+      const newDreams = await dreamStore.get(dreamsName);
+      newDreams.push(dream);
+      setDreamsState(newDreams.filter(dreamFilter));
+      await dreamStore.set(dreamsName, newDreams);
     };
 
     useEffect(() => {
@@ -122,9 +121,12 @@ export function useDreams(dreamFilter = filterDreams) {
 
     useInterval(refreshDreams, 10000);
     
-    return dreams;
+    return {dreams, dreamsName, addDream };
   
 }
+
+
+
 
 const filterDreams = ({loading, videoURL}) => loading === false && videoURL
 

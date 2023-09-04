@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import useInterval from "use-interval";
-import { getDreamMachineName, getDreams, setDreams, useDreams } from "../dreamStore";
+import { getInitialdreamsName, getDreams, setDreams, useDreams } from "../dreamStore";
 import useLocalStorage from "../useLocalStorage";
 
 
@@ -24,9 +24,9 @@ export default function DreamForm() {
   }, 1000)
   
   const [dreamPrompt, setDreamPrompt] = useState("");
-  const dispatchDream = useDreamDispatch(dreamPrompt, setDreamPrompt);
-  const dreams = useDreams(()=>true);
-  
+  const {dreams, dreamsName, addDream } = useDreams(()=>true);
+  const dispatchDream = useDreamDispatch(dreamPrompt, setDreamPrompt, addDream);
+ 
 
   const lastDream = dreams && dreams[dreams.length -1]?.dream;
 
@@ -44,8 +44,7 @@ export default function DreamForm() {
       <h1>A-Live º INTERACTION</h1>
       <p>An animation is worth more than a million words. It should appear in the collective video in a few minutes...</p>
       Send something related to your feeling in this moment i.e. your internal state or your surroundings. Let's write a story together.
-      {/* <p>Session: <b style={bgblacktrans}><a href={`/${getDreamMachineName()}/view/`}>{getDreamMachineName()}</a></b></p> */}
-      <p>Session: <b style={bgblacktrans}>{getDreamMachineName()}</b></p>
+      <p>Session: <b style={bgblacktrans}><a href={`/${dreamsName}/view/`}>{dreamsName}</a></b></p> 
       <p>Last sentence: <b style={bgblacktrans}>{lastDream}</b></p>
       <p>Type here:</p>
       <Input 
@@ -155,23 +154,17 @@ color: #fff;
 border: none;
 `
 
-function useDreamDispatch(dreamText, setDreamPrompt){
+function useDreamDispatch(dreamText, setDreamPrompt, addDream){
 
   const dispatchDream = async (event) => {
     event.preventDefault();
 
     console.log("dispatching dream", dreamText);
-    
-    const dreamsUntilNow = await getDreams()
-    console.log("got previous dreams", dreamsUntilNow);
-    const newDreams = append({ 
+
+    await addDream({ 
       dream: dreamText,
       started: false,
-    }, dreamsUntilNow)
-//       
-    console.log("dreamsWithNewOne", newDreams, "updating db")
-
-    await setDreams(newDreams)
+    });
     setDreamPrompt("")
   };
   

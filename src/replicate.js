@@ -1,6 +1,8 @@
 
 // import Replicate from "replicate";
 
+import awaitSleep from "await-sleep";
+
 
 
 // const replicate = new Replicate({
@@ -69,42 +71,41 @@ export async function extractPrompt(base64_image_url) {
   return data.id;
 }
 
-export async function getPrediction(predictionId, statusCallback=() => null) {
+export async function pollPrediction(predictionId, statusCallback=() => null) {
   // Poll for the result
-  const result = await pollForResult(predictionId, statusCallback);
-
-  return result;
-};
-
-async function pollForResult(predictionId, statusCallback) {
   const pollInterval = 3000; // 3 seconds
 
   while (true) {
-    try {
-      const response = await fetch(`${REPLICATE_API_URL}/${predictionId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${SOUNDMOSAIC_TOKEN}`
-        }
-      });
-
-      const data = await response.json();
-      console.log("status", data)
-      statusCallback(data);
-      if (data.status === 'succeeded' || data.status === 'failed') {
-        return data;
-      }
-
-      // Wait for the next poll
-      await new Promise(resolve => setTimeout(resolve, pollInterval));
-    } catch (error) {
-      // Handle any errors here
-      console.error('Error while polling for result:', error);
-      return null;
+    const data = await getPrediction(predictionId);
+    statusCallback(data);
+    if (data.status === 'succeeded' || data.status === 'failed') {
+      return data;
     }
+
+    await awaitSleep(pollInterval);
+  }
+};
+
+export async function getPrediction(predictionId) {
+  try {
+    const response = await fetch(`${REPLICATE_API_URL}/${predictionId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${SOUNDMOSAIC_TOKEN}`
+      }
+    });
+
+    const data = await response.json();
+    console.log("status", data)
+    return data
+  } catch (error) {
+    // Handle any errors here
+    console.error('Error while polling for result:', error);
+    return null;
   }
 }
+
 
 
 export async function getPredictionList(url=null) {

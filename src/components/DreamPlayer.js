@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { getDreamMachineName, useDreams } from "../dreamStore";
+import { useDreams } from "../dreamStore";
 
 // get playback rate from local storage
 const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 0.4)
@@ -9,7 +9,7 @@ const playbackRate = parseFloat(localStorage.getItem("playbackRate") || 0.4)
 export default function DreamsPlayer() {
 
     const { lastN=99 } = useParams()
-    const { dreams, index, nextDream: triggerNextDream } = useDreamsWithIndex(lastN)
+    const { dreams, index, nextDream: triggerNextDream, dreamsName } = useDreamsWithIndex(lastN)
     const [activePlayer, setActivePlayer] = useState(-1);
 
     const videoRefs = [useRef(null), useRef(null)]
@@ -65,7 +65,7 @@ export default function DreamsPlayer() {
 
     return <Container style={{position:"initial"}}>
         <div style={{width:"100%", height:"100%"}}>
-        <DreamBanner />
+        <DreamBanner dreamsName={dreamsName} />
             <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglePlayer} />
             <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglePlayer} />
             <Legenda>
@@ -91,7 +91,7 @@ const VideoPlayer = ({playerRef, onEnded}) => {
 
 let showBannerNum =0;
 
-function DreamBanner() {
+function DreamBanner({dreamsName}) {
     const [visible, setVisible] = useState(false)
     useEffect(() => {
         showBannerNum++;
@@ -104,7 +104,7 @@ function DreamBanner() {
             setVisible(true)
         } ,15000)
     },[])
-    return <URL style={{display: visible ? "":"none"}}>Participate -> <b>{`dreamachine.art/${getDreamMachineName()}`}</b></URL>
+    return <URL style={{display: visible ? "":"none"}}>{"Participate ->"}<b>{`dreamachine.art/${dreamsName}`}</b></URL>
 }
 
 // brutalist css styling
@@ -147,7 +147,7 @@ video {
 `
 
 export function useDreamsWithIndex(lastN=4) {
-  const allDreams = useDreams();
+  const {dreams: allDreams, dreamsName } = useDreams();
   const dreams = allDreams.slice(-1 * lastN);
 
   const [index, setIndex] = useState(null);
@@ -167,7 +167,7 @@ export function useDreamsWithIndex(lastN=4) {
 
   console.log("dreamIndex", index, "dreams", dreams);
 
-  return { dreams, index, nextDream };
+  return { dreams, index, nextDream, dreamsName };
 }
 
 const speak = (text) =>{ 

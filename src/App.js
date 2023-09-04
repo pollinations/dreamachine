@@ -3,7 +3,6 @@ import { Route, Routes, Outlet, useParams, useNavigate } from 'react-router-dom'
 import DreamForm from './components/DreamForm';
 import DreamList from './components/DreamList';
 import DreamPlayer from './components/DreamPlayer';
-import { setDreamMachineName } from './dreamStore';
 
 // function App() {
 
@@ -25,21 +24,9 @@ import { setDreamMachineName } from './dreamStore';
 
 
 const Dream = () => {
-  const { dreamId } = useParams();
-
-  useEffect(() => {
-    // Perform some global action here based on dreamId.
-    // Fetch data, update state, etc.
-    console.log(`Dream ID changed: ${dreamId}`);
-    // Perform your global actions here
-    setDreamMachineName(dreamId);
-  }, [dreamId]);
-
-  return (
-    <div>
+    return <div>
       <Outlet />
     </div>
-  );
 };
 
 const RedirectToAlive = () => {
