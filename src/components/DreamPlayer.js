@@ -17,18 +17,18 @@ export default function DreamsPlayer() {
 
     console.log("dreamsPlayer dreams", dreams)
 
-    const dream = dreams[index]
-
-    const [text, setText] = useState("---")
+    const dream = dreams[index];
     const nextDream = dreams[(index + 1) % dreams.length]
 
-    
+    const [text, setText] = useState("---")
+
+    // Switch to the next dream and toggle the active video player
     const triggerNextDreamAndTogglePlayer = () => {
         triggerNextDream()
         setActivePlayer(1-activePlayer)
     }
 
-
+    // Set initial video sources and active player
     useEffect(() => {
         if (dreams.length > 1 && activePlayer === -1) {
             videoRefs[0].current.src = dream.videoURL
@@ -42,17 +42,8 @@ export default function DreamsPlayer() {
     useEffect(() => {
         if (activePlayer !== -1) {
             console.log("activePlayer", activePlayer)
-            videoRefs[0].current.playbackRate = playbackRate;
-            videoRefs[1].current.playbackRate = playbackRate;
-            videoRefs[1-activePlayer].current.pause()
-            videoRefs[1-activePlayer].current.currentTime = 0
-            videoRefs[1-activePlayer].current.src = nextDream.videoURL
-            videoRefs[1-activePlayer].current.style.zIndex = -2
-            videoRefs[activePlayer].current.play()
-            videoRefs[activePlayer].current.style.zIndex = -1
-
+            loadVideoSwitchActivePlayer(videoRefs, activePlayer, nextDream.videoURL);
             const duration = videoRefs[activePlayer].current.duration;
-            console.log("duration", duration)
             setTimeout(() => {
                 setText(dream.dream)
             }, Math.round((duration * 1000) / (2 * playbackRate)));
@@ -90,6 +81,17 @@ const VideoPlayer = ({playerRef, onEnded}) => {
 }
 
 let showBannerNum =0;
+
+function loadVideoSwitchActivePlayer(videoRefs, activePlayer, videoURL) {
+    videoRefs[0].current.playbackRate = playbackRate;
+    videoRefs[1].current.playbackRate = playbackRate;
+    videoRefs[1 - activePlayer].current.pause();
+    videoRefs[1 - activePlayer].current.currentTime = 0;
+    videoRefs[1 - activePlayer].current.src = videoURL;
+    videoRefs[1 - activePlayer].current.style.zIndex = -2;
+    videoRefs[activePlayer].current.play();
+    videoRefs[activePlayer].current.style.zIndex = -1;
+}
 
 function DreamBanner({dreamsName}) {
     const [visible, setVisible] = useState(false)
