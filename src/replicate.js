@@ -2,7 +2,7 @@
 // import Replicate from "replicate";
 
 import awaitSleep from "await-sleep";
-
+import fetch from "node-fetch";
 
 
 // const replicate = new Replicate({
@@ -30,7 +30,7 @@ export async function createImage(input) {
       'Authorization': `${SOUNDMOSAIC_TOKEN}`
     },
     body: JSON.stringify({
-      version: 'dab523c569aea41a888bf99df0d806eca064eecae49931123dc374c92b9a5f9e',
+      version: '6cf757dadbd84da1bda0979c41211a860e852dbbebb793024847c07b3c7ad8a7',
       input
     })
   });
@@ -127,3 +127,34 @@ export async function getPredictionList(url=null) {
   return [data.results, data.next];
 }
 
+
+
+
+
+export const generateDream = async (dream, {fastMode=false}) => {
+  console.log("executing / loading dream", dream);
+
+  let [prompt1, prompt2] = dream.prompt.split("\n").slice(0, 2);
+  if (!prompt2) prompt2 = prompt1;
+
+  let [unstyled_prompt1, unstyled_prompt2] = dream.unstyledPrompt.split("\n").slice(0, 2);
+  if (!unstyled_prompt2) unstyled_prompt2 = unstyled_prompt1;
+
+  console.log("running model for dream", prompt1, prompt2);
+
+  const id = await createImage({
+    prompt1,
+    prompt2,
+    unstyled_prompt1,
+    unstyled_prompt2,
+    num_inference_steps: fastMode ? 15 : 25,
+    interpolate_frames: fastMode ? 6 : 18,
+    scheduler: "KarrasDPM",
+    seed: 512,
+    negative_prompt: "",
+    width: 1280,
+    height: 720,
+  });
+
+  return { ...dream, predictionID: id, loading: true, started: true };
+};

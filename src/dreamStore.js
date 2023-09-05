@@ -1,7 +1,7 @@
 import Store from "@pollinations/ipfs/pollenStore";
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
-import { createImage, getPrediction, pollPrediction } from "./replicate";
+import { getPrediction, generateDream } from "./replicate";
 import { timeBasedPromptPimper } from "./promptPimpers";
 import { useParams } from "react-router-dom";
 
@@ -59,29 +59,6 @@ const buildPrompt = (dream, i ,dreams)  => {
 
   return dreamWithResults
 }
-
-
-const generateDream = async dream => {
-  console.log("executing / loading dream", dream);
-
-  let [prompt1, prompt2] = dream.prompt.split("\n").slice(0,2);
-  if (!prompt2) prompt2 = prompt1;
-  console.log("running model for dream", prompt1, prompt2);
-
-  const id = await createImage({
-    prompt1,
-    prompt2,
-    num_inference_steps: 25,
-    interpolate_frames: 18,
-    scheduler: "KarrasDPM",
-    seed:512,
-    negative_prompt:"",
-    width: 1280,
-    height: 720,
-  });
-  
-  return {...dream, predictionID: id, loading: true, started: true};
-};
 
 
 // poll dream store every 5 seconds and return the current state of dreams

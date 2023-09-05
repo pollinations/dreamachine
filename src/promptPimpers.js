@@ -11,10 +11,10 @@ const paperCut = prompt => `papercut collage of ${prompt} . mixed media, texture
 // execute one of the previously defined promptPimpers depending on the minute of the hour
 export const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
-  if (minute < 30) return surrealistPromptPimper1(prompt);
+  if (minute < 10) return vintagePhotoPimper(prompt);
   if (minute < 20) return paperCut(prompt);
   if (minute < 30) return surrealistPromptPimper2(prompt);
   if (minute < 40) return retroFuturisticPromptPimper4(prompt);
-  if (minute < 50) return vintagePhotoPimper(prompt);
+  if (minute < 50) return surrealistPromptPimper2(prompt);
   return vintagePhotoPimper(prompt);
 };
