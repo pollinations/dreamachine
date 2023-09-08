@@ -7,14 +7,22 @@ const solarPunkPromptPimper = prompt => `A solarpunk ${prompt}, high resolution,
 const graffitiPromptPimper = prompt => `${prompt}. graffiti art, inspired by, andrey gordeev`;
 const paperQuilling = prompt => `paper quilling art of ${prompt} . intricate, delicate, curling, rolling, shaping, coiling, loops, 3D, dimensional, ornamental`;
 const paperCut = prompt => `papercut collage of ${prompt} . mixed media, textured paper, overlapping, asymmetrical, abstract, vibrant, dimensional`;
+const psychedelic1 = prompt => `psychedelic art. ${prompt}`;
+const psychedelic2 = prompt => `psychedelic style ${prompt} . vibrant colors, swirling patterns, abstract forms, surreal, trippy`
+const pointilism = prompt => `pointillism style ${prompt} . composed entirely of small, distinct dots of color, vibrant, highly detailed`;
+const surrealism1 = prompt => `surrealist art ${prompt} . dreamlike, mysterious, provocative, symbolic, intricate, detailed`;
+const kirigami = prompt => `kirigami representation of ${prompt} . fabric folding, fabric cutting, Japanese, intricate carpet details, symmetrical, delicate ornamental, colorful`;
+
+// `paper quilling art of {prompt} . intricate, delicate, curling, rolling, shaping, coiling, loops, 3D, dimensional, ornamental`
+
 // const pimpDreamPrompts = (prompts) => prompts.split("\n").map(risographPromptPimper3).join("\n");
 // execute one of the previously defined promptPimpers depending on the minute of the hour
 export const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
-  if (minute < 30) return surrealistPromptPimper1(prompt);
-  if (minute < 20) return paperCut(prompt);
-  if (minute < 30) return surrealistPromptPimper2(prompt);
-  if (minute < 40) return retroFuturisticPromptPimper4(prompt);
+  if (minute < 30) return psychedelic1(prompt);
+  if (minute < 20) return surrealistPromptPimper2(prompt);
+  if (minute < 30) return surrealism1(prompt);
+  if (minute < 40) return pointilism(prompt);
   if (minute < 50) return vintagePhotoPimper(prompt);
-  return vintagePhotoPimper(prompt);
+  return kirigami(prompt); 
 };

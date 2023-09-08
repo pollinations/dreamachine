@@ -107,7 +107,7 @@ export function useDreams(dreamFilter = filterDreams) {
     };
 
     const addDream = async dream => {
-      const newDreams = await dreamStore.get(dreamsName);
+      const newDreams = await dreamStore.get(dreamsName) || [];
       newDreams.push(dream);
       setDreamsState(newDreams.filter(dreamFilter));
       await dreamStore.set(dreamsName, newDreams);
