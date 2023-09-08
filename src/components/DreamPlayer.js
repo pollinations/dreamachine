@@ -60,7 +60,7 @@ export default function DreamsPlayer() {
             <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglePlayer} />
             <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglePlayer} />
             <Legenda>
-             {text}
+             {text.slice(0,80)}
             </Legenda>
         </div>
 
