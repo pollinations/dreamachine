@@ -106,7 +106,7 @@ function DreamBanner({dreamsName}) {
             setVisible(true)
         } ,15000)
     },[])
-    return <URL style={{display: visible ? "":"none"}}>{"Participate ->"}<b>{`dreamachine.art/${dreamsName}`}</b></URL>
+    return <URL style={{display: visible ? "":"none"}}>{"Participate ->"}<b>{`dreamachine.art`}</b></URL>
 }
 
 // brutalist css styling
