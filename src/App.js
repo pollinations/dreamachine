@@ -32,7 +32,7 @@ const Dream = () => {
 const RedirectToAlive = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate('/a_live');
+    navigate('/onism');
   }, [navigate]);
   return null;
 };

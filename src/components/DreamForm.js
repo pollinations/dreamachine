@@ -42,9 +42,9 @@ export default function DreamForm() {
         <img style={{width: 100, margin:'2em 0'}}
         src='https://i.imgur.com/TtlWIYp.png' alt="pollinations"/>
       </a>
-      <h1>A-Live º INTERACTION</h1>
+      <h1>Onism</h1>
       <p>An animation is worth more than a million words. It should appear in the collective video in a few minutes...</p>
-      Send something related to your feeling in this moment i.e. your internal state or your surroundings. Let's write a story together.
+      Send a dream or something related to your feeling in this moment i.e. your internal state or your surroundings. Let's write a story together.
       <p>Session: <b style={bgblacktrans}><a href={`/${dreamsName}/view/`}>{dreamsName}</a></b></p> 
       <p>Last sentence: <b style={bgblacktrans}>{lastDream}</b></p>
       <p>Type here:</p>
