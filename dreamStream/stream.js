@@ -41,37 +41,74 @@ async function downloadVideo(videoUrl) {
             if (code !== 0) {
                 console.log(`child process exited with code ${code}`);  
                 reject();
+                return;
             }
-            if (!ffmpegStreamStarted) {
-                startFfmpeg();
-                ffmpegStreamStarted = true;
-            }
+            startFfmpeg();
             resolve();
         });
     });
 }
 
+let ffmpegStarted = false;
 async function startFfmpeg() {
-    // ffmpeg -re -f mpegts -i pipe: -vcodec libx264 -r 30 -g 30 -acodec copy -preset fast -vb 300k -pix_fmt yuv420p -f flv rtmp://live-ber.twitch.tv/app/live_882056162_hhQ8qcyHY7qmYxUJ0HNb9AGTcIbv5m
+    
+    if (ffmpegStarted) return;
+    ffmpegStarted = true;
 
-    const ffmpegCommand = `-f mpegts -re -stream_loop 9999 -i ${videoStreamFile} -vcodec libx264 -r 30 -g 30 -acodec copy -preset fast -vb 300k -pix_fmt yuv420p -f flv rtmp://live-ber.twitch.tv/app/${process.env.TWITCH_STREAM_KEY}`;
+    const audioFile1 = "/home/ubuntu/dreamachine/dreamStream/lofiradio2.mp3"
+    const audioFile2 = "/home/ubuntu/dreamachine/dreamStream/lofibgnoise.mp3"
 
-    const ffmpeg = spawn('ffmpeg', ffmpegCommand.split(" "));
+    const args = [
+        '-f', 'mpegts',
+        '-re',
+        '-stream_loop', '9999',
+        '-i', '/tmp/concatenatecStream.ts',
+        '-i', '/home/ubuntu/dreamachine/dreamStream/lofiradio2.mp3',
+        '-i', '/home/ubuntu/dreamachine/dreamStream/lofibgnoise.mp3',
+        '-filter_complex', '[1:a]aloop=loop=-1:size=2e+09[a1]; [2:a]aloop=loop=-1:size=2e+09[a2]; [a1][a2]amix=inputs=2:duration=longest[aout]',
+        '-map', '0:v',
+        '-map', '[aout]',
+        '-vcodec', 'libx264',
+        '-r', '30',
+        '-acodec', 'aac',
+        '-preset', 'fast',
+        '-vb', '6000k',
+        '-pix_fmt', 'yuv420p',
+        '-f', 'flv',
+        `rtmp://live-ber.twitch.tv/app/${process.env.TWITCH_STREAM_KEY}`
+    ];
 
+    console.log('ffmpeg args', args.join(" "));
+    const ffmpeg = spawn('ffmpeg', args);
+    
     ffmpeg.stderr.on('data', (data) => {
-        // console.log(`stderr: ${data}`);
-    }
-    );
-
+        console.error(`FFmpeg stderr: ${data}`);
+      });
+      
+      ffmpeg.on('error', (error) => {
+        console.error(`Error spawning FFmpeg: ${error}`);
+      });
+      
+      ffmpeg.on('close', (code) => {
+        console.log(`FFmpeg process closed with code ${code}`);
+      });
 
     return new Promise((resolve, reject) => {
         ffmpeg.on('exit', (code) => {
             console.log(`child process exited with code ${code}`);
+            if (code !== 0) {
+                console.log(`child process exited with code ${code}`);  
+                reject();
+                return;
+            }
             resolve();
         });
     });
 
 }
+
+
+startFfmpeg();
 
 
 // delete the video stream file and start downloading the videos
@@ -86,7 +123,7 @@ const getVideoURLPromise = async (lastmessage, message) => {
     // prompt is the last message and new message with a new line in between
     const prompt = [lastmessage, message].map(timeBasedPromptPimper).join("\n");
     const unstyledPrompt = [lastmessage, message].join("\n");
-    const dream = await generateDream({prompt, unstyledPrompt}, {fastMode: false});
+    const dream = await generateDream({prompt, unstyledPrompt}, {fastMode: true});
     lastmessage = message;
 
     const result = await pollPrediction(dream.predictionID);
@@ -136,3 +173,6 @@ registerListener(message => {
 });
 
 processDownloadQueue();
+
+// ffmpeg command to split a video in half and keep the last half
+// ffmpeg -i input.mp4 -ss 00:00:00 -t 00:00:10 -c copy output.mp4

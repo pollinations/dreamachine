@@ -28,6 +28,7 @@ export const registerListener = (callback) => {
         if (self) return;
       
         console.log(`Received message: ${message}`);
-        callback(message);
+        const from = tags['display-name'];
+        callback(`${from}: ${message}`);
       }); 
 };      
