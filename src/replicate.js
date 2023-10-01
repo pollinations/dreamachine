@@ -2,7 +2,7 @@
 // import Replicate from "replicate";
 
 import awaitSleep from "await-sleep";
-import fetch from "node-fetch";
+
 
 
 // const replicate = new Replicate({
@@ -30,7 +30,7 @@ export async function createImage(input) {
       'Authorization': `${SOUNDMOSAIC_TOKEN}`
     },
     body: JSON.stringify({
-      version: '6cf757dadbd84da1bda0979c41211a860e852dbbebb793024847c07b3c7ad8a7',
+      version: 'dab523c569aea41a888bf99df0d806eca064eecae49931123dc374c92b9a5f9e',
       input
     })
   });

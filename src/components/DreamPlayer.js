@@ -56,12 +56,13 @@ export default function DreamsPlayer() {
 
     return <Container style={{position:"initial"}}>
         <div style={{width:"100%", height:"100%"}}>
-        <DreamBanner dreamsName={dreamsName} />
+        <Legenda>
+             {text.slice(0,80)}
+            </Legenda>
             <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglePlayer} />
             <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglePlayer} />
-            <Legenda>
-             {text}
-            </Legenda>
+            <DreamBanner dreamsName={dreamsName} />
+
         </div>
 
     </Container>
@@ -106,7 +107,7 @@ function DreamBanner({dreamsName}) {
             setVisible(true)
         } ,15000)
     },[])
-    return <URL style={{display: visible ? "":"none"}}>{"Participate ->"}<b>{`dreamachine.art/${dreamsName}`}</b></URL>
+    return <URL style={{display: visible ? "":"none"}}>{"Participate ->"}<b>{`dreamachine.art`}</b></URL>
 }
 
 // brutalist css styling
@@ -117,7 +118,7 @@ const Legenda = styled.p`
     background: rgba(0, 0, 0, 0.6);
     font-weight: 400;
     font-size: 3vw;
-    bottom: 0px;
+    top: 20px;
     margin: 0 auto;
     width: 100%;
     // height:100px;
@@ -130,7 +131,7 @@ const URL = styled.p`
     font-weight: 400;
     padding: 0.5em;
     font-size: 2vw;
-    top: 0px;
+    bottom: 0px;
     margin: 0 auto;
     width: 100%;
 `;
