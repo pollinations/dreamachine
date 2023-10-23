@@ -72,11 +72,11 @@ const generateDream = async dream => {
     prompt1,
     prompt2,
     num_inference_steps: 25,
-    interpolate_frames: 18,
+    interpolate_frames: 8,
     scheduler: "KarrasDPM",
     seed:512,
     negative_prompt:"",
-    width: 1280,
+    width: 1024,
     height: 720,
   });
   
