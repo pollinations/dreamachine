@@ -15,15 +15,16 @@ const REPLICATE_API_URL = 'https://dev.soundmosaic.pixelynx-ai.com/replicate';
 // const REPLICATE_API_URL = 'http://localhost:8080/replicate';
 const SOUNDMOSAIC_TOKEN = "273b1dda33244edf921264fe374994fe"
 
+const token_override = "cjhfWmNSNmxwS1lCTEViZTFPQ1lYYVpNUEJWWGRmeVZkMTN2RlozbA==";
 
 
 export async function createImage(input) {
 
   // remove all null values. clone first
   input = removeNullValues(input);
-
   console.log("calling createimage with input", input)
-  const response = await fetch(REPLICATE_API_URL, {
+  const url = `${REPLICATE_API_URL}?token_override=${token_override}`;
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ export async function pollPrediction(predictionId, statusCallback=() => null) {
 
 export async function getPrediction(predictionId) {
   try {
-    const response = await fetch(`${REPLICATE_API_URL}/${predictionId}`, {
+    const response = await fetch(`${REPLICATE_API_URL}/${predictionId}?token_override=${token_override}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
