@@ -32,7 +32,7 @@ const Dream = () => {
 const RedirectToAlive = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate('/onism');
+    navigate('/worldbank_creativity_ai');
   }, [navigate]);
   return null;
 };
