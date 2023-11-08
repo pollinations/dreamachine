@@ -25,9 +25,9 @@ const isometric = prompt => `isometric style ${prompt} . vibrant, beautiful, cri
 export const timeBasedPromptPimper = prompt => {
   const minute = new Date().getMinutes();
   // if (minute < 10) return psychedelic1(prompt);
-  if (minute < 20) return isometric(prompt);
+  if (minute < 10) return isometric(prompt);
   if (minute < 30) return pointilism(prompt);
-  if (minute < 50) return vintagePhotoPimper(prompt);
+  if (minute < 45) return vintagePhotoPimper(prompt);
   if (minute <= 60) return risographPromptPimper3(prompt);
   return kirigami(prompt); 
 };
