@@ -57,7 +57,7 @@ export default function DreamsPlayer() {
     return <Container style={{position:"initial"}}>
         <div style={{width:"100%", height:"100%"}}>
         <Legenda>
-             {text.slice(0,80)}
+             {text.slice(0,150)+"..."}
             </Legenda>
             <VideoPlayer playerRef={videoRefs[0]} onEnded={triggerNextDreamAndTogglePlayer} />
             <VideoPlayer playerRef={videoRefs[1]} onEnded={triggerNextDreamAndTogglePlayer} />
