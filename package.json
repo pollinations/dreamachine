@@ -2,10 +2,12 @@
   "name": "dreamachine",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@pollinations/ipfs": "github:pollinations/pollinations-ipfs#main",
     "await-sleep": "^0.0.1",
     "lodash.memoize": "^4.1.2",
+    "openai": "^4.16.1",
     "ramda": "^0.28.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",

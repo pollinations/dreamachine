@@ -42,7 +42,7 @@ export default function DreamForm() {
         <img style={{width: 100, margin:'2em 0'}}
         src='https://i.imgur.com/TtlWIYp.png' alt="pollinations"/>
       </a>
-      <h1>World Bank - Creativity & AI session</h1>
+      <h1>{formatDreamsName(dreamsName)}</h1>
       <p>An animation is worth more than a million words. It should appear in the collective video in a few minutes...</p>
       Send a dream or something related to your feeling in this moment i.e. your internal state or your surroundings. Let's write a story together.
       <p>Session: <b style={bgblacktrans}><a href={`/${dreamsName}/view/`}>{dreamsName}</a></b></p> 
@@ -157,3 +157,13 @@ function useDreamDispatch(dreamText, setDreamPrompt, addDream){
 }
 
 
+
+function formatDreamsName(dreamsName) {
+  // remove special chars and uppercase first letter of words
+  return dreamsName
+    .replace(/[_]/g, " ")
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+}

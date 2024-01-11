@@ -1,0 +1,3 @@
+[11/08/23 11:08:11] INFO     No mic index provided, using default                                              whisper_mic.py:54
+[11/08/23 11:08:13] INFO     Mic setup complete                                                                whisper_mic.py:65
+                    INFO     Listening...                                                                     whisper_mic.py:148
